@@ -1,0 +1,2321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yogya – कौशल से योग्यता तक</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+:root{--navy:#1a237e;--teal:#00acc1;--teal-dark:#007c91;--bg:#f0f4f8;--white:#ffffff;--text:#1a1a2e;--muted:#6b7280;--border:#e2e8f0;--success:#10b981;--error:#ef4444;--warning:#f59e0b;--shadow:0 4px 24px rgba(26,35,126,.10);--shadow-lg:0 8px 40px rgba(26,35,126,.15);}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+/* TOPBAR */
+.topbar{background:#fff;box-shadow:0 2px 12px rgba(26,35,126,.08);padding:0 28px;height:64px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.logo-wrap img{height:42px;object-fit:contain;}
+.topbar-nav{display:flex;align-items:center;gap:12px;}
+.tbtn{padding:7px 18px;border-radius:8px;font-family:'Sora',sans-serif;font-size:13px;font-weight:600;cursor:pointer;border:2px solid transparent;transition:all .2s;}
+.tbtn-outline{border-color:var(--teal);color:var(--teal);background:transparent;}
+.tbtn-outline:hover{background:var(--teal);color:#fff;}
+.tbtn-solid{background:linear-gradient(135deg,var(--navy),var(--teal));color:#fff;}
+.tbtn-solid:hover{opacity:.9;transform:translateY(-1px);}
+.xp-pill{display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#f59e0b,#fbbf24);color:#fff;padding:5px 14px;border-radius:20px;font-family:'Sora',sans-serif;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(245,158,11,.3);transition:transform .15s;}
+.xp-pill:hover{transform:scale(1.05);}
+.hi-name{font-weight:600;color:var(--navy);font-size:14px;}
+
+/* PAGES */
+.page{display:none;min-height:calc(100vh - 64px);}
+.page.active{display:block;}
+
+/* ── LOGIN ── */
+.auth-bg{min-height:calc(100vh - 64px);display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--navy) 0%,#2a3aa0 45%,#1a8fa0 100%);padding:32px 16px;position:relative;overflow:hidden;}
+.auth-bg::before{content:'';position:absolute;top:-100px;left:-100px;width:400px;height:400px;border-radius:50%;background:rgba(255,255,255,.04);}
+.auth-card{background:#fff;border-radius:24px;padding:44px 40px;width:100%;max-width:430px;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:slideUp .45s ease;position:relative;z-index:1;}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.auth-logo{text-align:center;margin-bottom:24px;}
+.auth-logo img{height:52px;object-fit:contain;}
+.auth-title{font-family:'Sora',sans-serif;font-size:24px;font-weight:700;color:var(--navy);text-align:center;margin-bottom:4px;}
+.auth-sub{color:var(--muted);font-size:13px;text-align:center;margin-bottom:28px;}
+.fld{margin-bottom:18px;}
+.lbl{display:block;font-size:12px;font-weight:700;color:var(--text);margin-bottom:6px;}
+.inp{width:100%;padding:11px 14px;border:2px solid var(--border);border-radius:10px;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;background:#fafafa;transition:border .2s;}
+.inp:focus{border-color:var(--teal);background:#fff;}
+.inp.err-border{border-color:var(--error);}
+.err-msg{color:var(--error);font-size:11px;margin-top:4px;}
+.sel{width:100%;padding:11px 14px;border:2px solid var(--border);border-radius:10px;font-size:14px;font-family:'DM Sans',sans-serif;outline:none;background:#fafafa;transition:border .2s;cursor:pointer;}
+.sel:focus{border-color:var(--teal);background:#fff;}
+.btn-main{width:100%;padding:13px;border-radius:12px;background:linear-gradient(135deg,var(--navy),var(--teal));color:#fff;font-family:'Sora',sans-serif;font-size:15px;font-weight:700;border:none;cursor:pointer;transition:all .2s;margin-top:6px;}
+.btn-main:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,172,193,.3);}
+.btn-main:disabled{opacity:.55;cursor:not-allowed;transform:none;}
+.switch-txt{text-align:center;margin-top:18px;font-size:13px;color:var(--muted);}
+.switch-txt a{color:var(--navy);font-weight:700;cursor:pointer;text-decoration:underline;}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+
+/* ── SIGNUP WIZARD ── */
+.wizard-wrap{min-height:calc(100vh - 64px);background:linear-gradient(135deg,var(--navy) 0%,#2a3aa0 45%,#1a8fa0 100%);padding:32px 16px;display:flex;justify-content:center;}
+.wizard-card{background:#fff;border-radius:24px;padding:36px 34px;width:100%;max-width:580px;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:slideUp .45s ease;align-self:flex-start;}
+.progress-bar{display:flex;align-items:center;margin-bottom:32px;}
+.step-wrap{flex:1;display:flex;flex-direction:column;align-items:center;position:relative;}
+.step-wrap:not(:last-child)::after{content:'';position:absolute;top:16px;left:50%;width:100%;height:2px;background:var(--border);z-index:0;}
+.step-wrap.done:not(:last-child)::after,.step-wrap.curr:not(:last-child)::after{background:var(--teal);}
+.step-dot{width:32px;height:32px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:var(--muted);z-index:1;transition:all .3s;}
+.step-wrap.curr .step-dot{background:var(--navy);color:#fff;}
+.step-wrap.done .step-dot{background:var(--teal);color:#fff;}
+.step-lbl{font-size:10px;margin-top:5px;color:var(--muted);font-weight:600;text-align:center;}
+.step-wrap.curr .step-lbl{color:var(--navy);}
+.step-wrap.done .step-lbl{color:var(--teal);}
+.wiz-title{font-family:'Sora',sans-serif;font-size:20px;font-weight:700;color:var(--navy);margin-bottom:4px;}
+.wiz-sub{font-size:13px;color:var(--muted);margin-bottom:22px;}
+.wiz-step{display:none;}
+.wiz-step.active{display:block;animation:fadeIn .3s ease;}
+.wiz-actions{display:flex;gap:12px;margin-top:28px;}
+.btn-back{padding:11px 24px;border-radius:10px;border:2px solid var(--navy);color:var(--navy);background:transparent;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;cursor:pointer;transition:all .2s;}
+.btn-back:hover{background:var(--navy);color:#fff;}
+.btn-next{flex:1;padding:11px 24px;border-radius:10px;background:linear-gradient(135deg,var(--navy),var(--teal));color:#fff;border:none;font-family:'Sora',sans-serif;font-weight:700;font-size:13px;cursor:pointer;transition:all .2s;}
+.btn-next:hover{transform:translateY(-1px);box-shadow:var(--shadow);}
+.skill-grid{display:flex;flex-wrap:wrap;gap:7px;margin-top:6px;}
+.sk{padding:5px 12px;border-radius:20px;border:2px solid var(--border);font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;background:#fafafa;user-select:none;}
+.sk:hover{border-color:var(--teal);color:var(--teal);}
+.sk.on{background:var(--navy);color:#fff;border-color:var(--navy);}
+
+/* ── SUCCESS ── */
+.success-wrap{min-height:calc(100vh - 64px);display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#e8f5e9,#e0f7fa);}
+.success-card{text-align:center;background:#fff;border-radius:24px;padding:56px 44px;box-shadow:var(--shadow-lg);animation:slideUp .45s ease;max-width:440px;width:90%;}
+.success-icon{width:76px;height:76px;background:linear-gradient(135deg,var(--success),#34d399);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:38px;}
+
+/* ── DASHBOARD ── */
+.dash-wrap{max-width:1080px;margin:0 auto;padding:36px 22px;}
+.dash-greet{font-family:'Sora',sans-serif;font-size:27px;font-weight:700;color:var(--navy);}
+.dash-sub{color:var(--muted);font-size:14px;margin-top:3px;margin-bottom:28px;}
+.dash-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:20px;margin-bottom:20px;}
+.dash-card{background:#fff;border-radius:20px;padding:28px;box-shadow:var(--shadow);cursor:pointer;transition:all .2s;border:2px solid transparent;position:relative;overflow:hidden;}
+.dash-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;}
+.dc-navy::before{background:linear-gradient(90deg,var(--navy),var(--teal));}
+.dc-teal::before{background:linear-gradient(90deg,var(--teal),#4dd0e1);}
+.dc-purple::before{background:linear-gradient(90deg,#7c3aed,#a78bfa);}
+.dc-gold::before{background:linear-gradient(90deg,#f59e0b,#fbbf24);}
+.dash-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:var(--teal);}
+.dc-icon{font-size:34px;margin-bottom:14px;}
+.dc-title{font-family:'Sora',sans-serif;font-size:18px;font-weight:700;color:var(--navy);margin-bottom:6px;}
+.dc-desc{color:var(--muted);font-size:13px;line-height:1.6;}
+.badge{display:inline-block;padding:3px 11px;border-radius:20px;font-size:11px;font-weight:700;margin-top:10px;}
+.badge-blue{background:#e0e7ff;color:var(--navy);}
+.badge-teal{background:#e0f7fa;color:var(--teal-dark);}
+.badge-purple{background:#ede9fe;color:#7c3aed;}
+.badge-gold{background:#fef3c7;color:#b45309;}
+
+/* Quiz dashboard card */
+.quiz-dash-card{background:linear-gradient(135deg,#1a237e 0%,#0d47a1 55%,#006064 100%);border-radius:20px;padding:26px 28px;color:#fff;cursor:pointer;transition:all .25s;position:relative;overflow:hidden;margin-bottom:20px;}
+.quiz-dash-card::after{content:'🎯';position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:72px;opacity:.08;}
+.quiz-dash-card:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,.2);}
+.qdc-inner{position:relative;z-index:1;}
+.qdc-tag{font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;opacity:.7;margin-bottom:5px;}
+.qdc-title{font-family:'Sora',sans-serif;font-size:20px;font-weight:800;margin-bottom:3px;}
+.qdc-sub{font-size:12px;opacity:.75;}
+.qdc-right{text-align:right;}
+.qdc-num{font-family:'Sora',sans-serif;font-size:38px;font-weight:800;line-height:1;}
+.qdc-numlab{font-size:11px;opacity:.7;}
+.qdc-bars{display:flex;gap:6px;margin-top:14px;}
+.qdc-bar{flex:1;height:5px;border-radius:99px;background:rgba(255,255,255,.2);transition:background .3s;}
+.qdc-bar.green{background:rgba(16,185,129,.8);}
+.qdc-bar.red{background:rgba(239,68,68,.7);}
+
+/* Stats row */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:14px;}
+.stat-card{background:#fff;border-radius:14px;padding:18px 20px;box-shadow:var(--shadow);display:flex;align-items:center;gap:14px;}
+.stat-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+.stat-lbl{font-size:12px;color:var(--muted);font-weight:600;}
+.stat-val{font-weight:700;color:var(--navy);font-size:14px;margin-top:2px;}
+.stat-card.gold-bg{background:linear-gradient(135deg,#fef3c7,#fde68a);cursor:pointer;}
+.stat-card.gold-bg .stat-lbl{color:#92400e;}
+.stat-card.gold-bg .stat-val{color:#b45309;font-size:17px;font-family:'Sora',sans-serif;}
+
+/* ── MOCK TEST PAGE ── */
+.level-card{background:#fff;border:2.5px solid var(--border);border-radius:16px;padding:18px 12px;cursor:pointer;transition:all .2s;text-align:center;}
+.level-card:hover{border-color:var(--teal);transform:translateY(-2px);box-shadow:var(--shadow);}
+.level-card.selected{border-color:var(--navy);background:#e8eaf6;}
+.mock-hero{background:linear-gradient(135deg,#1a237e 0%,#0d47a1 55%,#006064 100%);border-radius:22px;padding:30px 28px;color:#fff;margin-bottom:22px;position:relative;overflow:hidden;}
+.mock-hero::after{content:'🧠';position:absolute;right:24px;top:50%;transform:translateY(-50%);font-size:80px;opacity:.08;}
+.mock-hero-inner{position:relative;z-index:1;}
+.mock-hero-tag{font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;opacity:.7;margin-bottom:5px;}
+.mock-hero-title{font-family:'Sora',sans-serif;font-size:22px;font-weight:800;margin-bottom:4px;}
+.mock-hero-sub{font-size:13px;opacity:.75;}
+
+.mock-config{background:#fff;border-radius:18px;padding:22px;box-shadow:var(--shadow);margin-bottom:18px;}
+.mock-config-title{font-family:'Sora',sans-serif;font-size:14px;font-weight:700;color:var(--navy);margin-bottom:14px;}
+.topic-grid{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px;}
+.topic-chip{padding:6px 14px;border-radius:20px;border:2px solid var(--border);font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;background:#fafafa;user-select:none;}
+.topic-chip:hover{border-color:var(--teal);color:var(--teal-dark);}
+.topic-chip.selected{background:var(--navy);color:#fff;border-color:var(--navy);}
+.topic-chip.recommended{border-color:#a5f3fc;background:#ecfeff;color:#0e7490;}
+.topic-chip.recommended.selected{background:var(--teal);color:#fff;border-color:var(--teal);}
+
+.config-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
+.config-group label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:8px;}
+.config-btns{display:flex;gap:6px;}
+.cfg-btn{flex:1;padding:8px 4px;border-radius:10px;border:2px solid var(--border);background:#fafafa;font-family:'Sora',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;text-align:center;}
+.cfg-btn:hover{border-color:var(--teal);}
+.cfg-btn.on{background:var(--navy);color:#fff;border-color:var(--navy);}
+.btn-start-mock{width:100%;padding:14px;border-radius:14px;background:linear-gradient(135deg,var(--navy),var(--teal));color:#fff;font-family:'Sora',sans-serif;font-size:15px;font-weight:700;border:none;cursor:pointer;transition:all .2s;}
+.btn-start-mock:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,172,193,.3);}
+.btn-start-mock:disabled{opacity:.55;cursor:not-allowed;}
+
+/* Mock Test Taking */
+.mock-progress-bar{height:5px;background:#e2e8f0;border-radius:99px;margin-bottom:20px;overflow:hidden;}
+.mock-progress-fill{height:100%;background:linear-gradient(90deg,var(--navy),var(--teal));border-radius:99px;transition:width .4s ease;}
+.mock-q-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.mock-q-dots{display:flex;gap:6px;flex-wrap:wrap;}
+.mock-qdot{width:28px;height:28px;border-radius:50%;background:var(--border);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;color:var(--muted);cursor:pointer;transition:all .2s;}
+.mock-qdot.active{background:var(--navy);color:#fff;transform:scale(1.15);}
+.mock-qdot.answered{background:var(--teal);color:#fff;}
+.mock-qdot.correct{background:var(--success);color:#fff;}
+.mock-qdot.wrong{background:var(--error);color:#fff;}
+
+.mock-q-card{background:#fff;border-radius:20px;padding:28px;box-shadow:var(--shadow-lg);animation:slideUp .3s ease;margin-bottom:14px;}
+.mock-diff-tag{display:inline-block;padding:3px 11px;border-radius:20px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;}
+.diff-easy{background:#d1fae5;color:#065f46;}
+.diff-medium{background:#fef3c7;color:#92400e;}
+.diff-hard{background:#fee2e2;color:#991b1b;}
+.mock-q-num{font-size:11px;color:var(--muted);font-weight:600;margin-bottom:6px;}
+.mock-q-text{font-family:'Sora',sans-serif;font-size:18px;font-weight:700;color:var(--navy);line-height:1.55;margin-bottom:22px;}
+.mock-opts{display:flex;flex-direction:column;gap:9px;}
+.mock-opt{padding:13px 16px;border-radius:12px;border:2px solid var(--border);background:#fafafa;font-size:14px;font-weight:500;cursor:pointer;transition:all .15s;text-align:left;display:flex;align-items:center;gap:10px;}
+.mock-opt:hover:not(.locked){border-color:var(--teal);background:#f0fdff;color:var(--teal-dark);}
+.mock-opt.picked{border-color:var(--navy);background:#e8eaf6;}
+.mock-opt.correct{border-color:var(--success)!important;background:#d1fae5!important;color:#065f46!important;}
+.mock-opt.wrong{border-color:var(--error)!important;background:#fee2e2!important;color:#991b1b!important;}
+.mock-opt.locked{cursor:default;}
+.mock-opt-letter{width:28px;height:28px;border-radius:8px;background:var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex-shrink:0;}
+.mock-opt.correct .mock-opt-letter{background:var(--success);color:#fff;}
+.mock-opt.wrong .mock-opt-letter{background:var(--error);color:#fff;}
+.mock-opt.picked .mock-opt-letter{background:var(--navy);color:#fff;}
+
+.mock-feedback{border-radius:12px;padding:13px 15px;margin-top:13px;font-weight:600;font-size:13px;display:none;align-items:flex-start;gap:10px;}
+.mock-feedback.show{display:flex;}
+.mock-feedback.ok{background:#d1fae5;color:#065f46;}
+.mock-feedback.no{background:#fee2e2;color:#991b1b;}
+
+.mock-nav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px;}
+.btn-ghost{padding:10px 20px;border-radius:10px;border:2px solid var(--navy);color:var(--navy);background:transparent;font-family:'Sora',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;}
+.btn-ghost:hover{background:var(--navy);color:#fff;}
+.btn-teal{padding:10px 22px;border-radius:10px;background:linear-gradient(135deg,var(--teal),var(--teal-dark));color:#fff;border:none;font-family:'Sora',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;}
+.btn-teal:hover:not(:disabled){transform:translateY(-1px);box-shadow:var(--shadow);}
+.btn-teal:disabled{opacity:.45;cursor:not-allowed;}
+.btn-submit-mock{flex:1;padding:12px;border-radius:12px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:none;font-family:'Sora',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;}
+.btn-submit-mock:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 6px 20px rgba(16,185,129,.3);}
+.btn-submit-mock:disabled{opacity:.45;cursor:not-allowed;}
+
+/* Mock Results */
+.mock-result-hero{border-radius:22px;padding:30px;text-align:center;color:#fff;margin-bottom:20px;}
+.mock-result-hero.great{background:linear-gradient(135deg,#059669,#10b981);}
+.mock-result-hero.good{background:linear-gradient(135deg,#d97706,#f59e0b);}
+.mock-result-hero.low{background:linear-gradient(135deg,#dc2626,#ef4444);}
+.mock-result-score{font-family:'Sora',sans-serif;font-size:56px;font-weight:900;line-height:1;}
+.mock-result-label{font-size:18px;font-weight:700;margin-top:6px;opacity:.9;}
+.mock-result-detail{font-size:13px;opacity:.75;margin-top:4px;}
+.mock-ai-feedback{background:#fff;border-radius:18px;padding:22px;box-shadow:var(--shadow);margin-bottom:16px;}
+.mock-focus-chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px;}
+.mock-focus-chip{padding:4px 13px;border-radius:20px;background:#e0e7ff;color:var(--navy);font-size:11px;font-weight:700;}
+.mock-review-card{background:#fff;border-radius:16px;padding:18px;margin-bottom:10px;box-shadow:var(--shadow);border-left:4px solid var(--border);}
+.mock-review-card.ok{border-left-color:var(--success);}
+.mock-review-card.no{border-left-color:var(--error);}
+.mock-exp-toggle{font-size:11px;color:var(--teal-dark);font-weight:700;cursor:pointer;margin-top:6px;display:inline-block;}
+
+/* ── INNER PAGES COMMON ── */
+.inner-wrap{max-width:1060px;margin:0 auto;padding:36px 22px;}
+.narrow-wrap{max-width:760px;margin:0 auto;padding:36px 22px;}
+.back-link{display:inline-flex;align-items:center;gap:7px;color:var(--navy);font-weight:600;cursor:pointer;margin-bottom:24px;font-size:14px;transition:color .2s;}
+.back-link:hover{color:var(--teal);}
+.page-title{font-family:'Sora',sans-serif;font-size:22px;font-weight:700;color:var(--navy);margin-bottom:4px;}
+.page-sub{color:var(--muted);font-size:13px;margin-bottom:24px;}
+.card{background:#fff;border-radius:20px;padding:26px;box-shadow:var(--shadow);margin-bottom:20px;}
+.card-title{font-family:'Sora',sans-serif;font-size:16px;font-weight:700;color:var(--navy);margin-bottom:16px;}
+
+/* ── GAP ANALYSIS ── */
+.analysis-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;}
+.goal-sel-row{display:flex;align-items:center;gap:14px;margin-bottom:24px;flex-wrap:wrap;}
+.job-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.job-card{background:#f8faff;border:1px solid #c7d2fe;border-radius:12px;padding:14px;}
+.job-card.eligible{border-color:#6ee7b7;background:#f0fdf4;}
+.skill-bar-wrap{margin-bottom:12px;}
+.skill-bar-row{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;font-weight:500;}
+.skill-bar-track{background:#e2e8f0;border-radius:99px;height:7px;}
+.skill-bar-fill{height:7px;border-radius:99px;transition:width 1s ease;}
+.chips-wrap{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px;}
+.chip{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;}
+.chip-have{background:#d1fae5;color:#065f46;}
+.chip-miss{background:#fee2e2;color:#dc2626;}
+
+/* ── RESUME PAGE ── */
+.resume-empty{text-align:center;background:#fff;border-radius:20px;padding:56px 36px;box-shadow:var(--shadow);}
+.upload-zone{border:2px dashed var(--border);border-radius:12px;padding:28px;text-align:center;cursor:pointer;transition:all .2s;background:#fafafa;}
+.upload-zone:hover,.upload-zone.has{border-color:var(--success);background:#f0fdf4;}
+.ai-result-wrap{background:linear-gradient(135deg,#f0f4ff,#f0fdff);border:1px solid #c7d2fe;border-radius:16px;padding:22px;margin-top:14px;}
+.score-big{font-family:'Sora',sans-serif;font-size:44px;font-weight:800;color:var(--teal);}
+
+/* ── PROFILE ── */
+.profile-header{background:linear-gradient(135deg,var(--navy),var(--teal));border-radius:20px;padding:28px;color:#fff;margin-bottom:20px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
+.avatar{width:68px;height:68px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:30px;font-family:'Sora',sans-serif;font-weight:700;border:3px solid rgba(255,255,255,.35);}
+.sec-title{font-family:'Sora',sans-serif;font-size:15px;font-weight:700;color:var(--navy);margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid var(--bg);}
+
+/* ── QUIZ PAGE ── */
+.quiz-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;}
+.q-dots{display:flex;gap:8px;}
+.qdot{width:11px;height:11px;border-radius:50%;background:var(--border);transition:all .3s;}
+.qdot.active{background:var(--teal);transform:scale(1.3);}
+.qdot.correct{background:var(--success);}
+.qdot.wrong{background:var(--error);}
+.session-xp{background:#fef3c7;border-radius:20px;padding:5px 14px;font-family:'Sora',sans-serif;font-weight:700;font-size:13px;color:#b45309;}
+
+.q-card{background:#fff;border-radius:22px;padding:32px;box-shadow:var(--shadow-lg);animation:slideUp .3s ease;margin-bottom:16px;}
+.q-skill-badge{display:inline-block;background:#e0f7fa;color:var(--teal-dark);font-size:10px;font-weight:700;padding:3px 11px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;}
+.q-num{font-size:11px;color:var(--muted);font-weight:600;margin-bottom:6px;}
+.q-text{font-family:'Sora',sans-serif;font-size:19px;font-weight:700;color:var(--navy);line-height:1.5;margin-bottom:24px;}
+.q-opts{display:flex;flex-direction:column;gap:10px;}
+.q-opt{padding:14px 18px;border-radius:12px;border:2px solid var(--border);background:#fafafa;font-size:14px;font-weight:500;cursor:pointer;transition:all .15s;text-align:left;display:flex;align-items:center;gap:10px;}
+.q-opt:hover:not(.locked){border-color:var(--teal);background:#f0fdff;color:var(--teal-dark);}
+.q-opt.picked{border-color:var(--navy);background:#e8eaf6;}
+.q-opt.correct{border-color:var(--success)!important;background:#d1fae5!important;color:#065f46!important;}
+.q-opt.wrong{border-color:var(--error)!important;background:#fee2e2!important;color:#991b1b!important;}
+.q-opt.locked{cursor:default;}
+.q-letter{width:26px;height:26px;border-radius:7px;background:var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex-shrink:0;}
+.q-opt.correct .q-letter{background:var(--success);color:#fff;}
+.q-opt.wrong .q-letter{background:var(--error);color:#fff;}
+.q-opt.picked .q-letter{background:var(--navy);color:#fff;}
+
+.q-feedback{border-radius:12px;padding:14px 16px;margin-top:14px;font-weight:600;font-size:13px;display:none;align-items:flex-start;gap:10px;}
+.q-feedback.show{display:flex;}
+.q-feedback.ok{background:#d1fae5;color:#065f46;}
+.q-feedback.no{background:#fee2e2;color:#991b1b;}
+.q-exp{font-size:12px;opacity:.8;margin-top:3px;font-weight:400;line-height:1.5;}
+
+.btn-next-q{width:100%;padding:13px;border-radius:13px;background:linear-gradient(135deg,var(--navy),var(--teal));color:#fff;font-family:'Sora',sans-serif;font-weight:700;font-size:14px;border:none;cursor:pointer;transition:all .2s;}
+.btn-next-q:hover{transform:translateY(-2px);box-shadow:var(--shadow);}
+.btn-next-q:disabled{opacity:.45;cursor:not-allowed;transform:none;}
+
+.q-loading{text-align:center;padding:48px 20px;}
+.spinner{width:40px;height:40px;border:4px solid var(--border);border-top-color:var(--teal);border-radius:50%;animation:spin .8s linear infinite;margin:0 auto 14px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.quiz-done-card,.quiz-empty-card{background:#fff;border-radius:22px;padding:48px 32px;text-align:center;box-shadow:var(--shadow-lg);}
+.xp-pill-big{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#f59e0b,#fbbf24);color:#fff;font-family:'Sora',sans-serif;font-weight:800;font-size:26px;padding:10px 28px;border-radius:16px;margin:14px 0;box-shadow:0 4px 16px rgba(245,158,11,.4);}
+.quiz-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:20px;}
+.btn-ghost{padding:10px 22px;border-radius:10px;border:2px solid var(--navy);color:var(--navy);background:transparent;font-family:'Sora',sans-serif;font-weight:600;font-size:13px;cursor:pointer;transition:all .2s;}
+.btn-ghost:hover{background:var(--navy);color:#fff;}
+.btn-gold{padding:10px 22px;border-radius:10px;background:linear-gradient(135deg,#f59e0b,#fbbf24);color:#fff;border:none;font-family:'Sora',sans-serif;font-weight:700;font-size:13px;cursor:pointer;transition:all .2s;}
+.btn-gold:hover{opacity:.9;transform:translateY(-1px);}
+
+/* ── SCORE PAGE ── */
+.score-hero{background:linear-gradient(135deg,var(--navy),var(--teal));border-radius:22px;padding:36px;color:#fff;text-align:center;margin-bottom:20px;position:relative;overflow:hidden;}
+.score-hero::before{content:'🏆';position:absolute;font-size:130px;opacity:.05;top:-10px;right:-10px;}
+.big-pts{font-family:'Sora',sans-serif;font-size:68px;font-weight:800;line-height:1;}
+.level-chip{display:inline-block;background:rgba(255,255,255,.2);border:2px solid rgba(255,255,255,.3);border-radius:20px;padding:5px 18px;font-family:'Sora',sans-serif;font-weight:700;font-size:13px;margin-top:10px;}
+.score-grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:20px;}
+.score-mini{background:#fff;border-radius:14px;padding:18px;text-align:center;box-shadow:var(--shadow);}
+.score-mini-num{font-family:'Sora',sans-serif;font-size:24px;font-weight:800;color:var(--navy);}
+.score-mini-lbl{font-size:11px;color:var(--muted);font-weight:600;margin-top:3px;}
+.hist-table{width:100%;border-collapse:collapse;}
+.hist-table th{text-align:left;font-size:11px;color:var(--muted);font-weight:700;padding:7px 10px;border-bottom:2px solid var(--border);}
+.hist-table td{padding:11px 10px;border-bottom:1px solid var(--border);font-size:13px;}
+.hist-table tr:last-child td{border-bottom:none;}
+.pts-tag{display:inline-flex;align-items:center;gap:3px;background:#fef3c7;color:#d97706;font-weight:700;padding:2px 9px;border-radius:20px;font-size:11px;}
+
+/* ── EFFECTS ── */
+@keyframes floatUp{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-80px) scale(1.5)}}
+.xp-floater{position:fixed;font-family:'Sora',sans-serif;font-weight:800;font-size:22px;color:#f59e0b;text-shadow:0 2px 8px rgba(0,0,0,.2);pointer-events:none;z-index:9999;animation:floatUp 1.2s ease forwards;}
+@keyframes cfFall{0%{transform:translateY(-10px) rotate(0);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+.cf{position:fixed;pointer-events:none;z-index:9998;animation:cfFall linear forwards;}
+
+/* TOAST */
+.toast{position:fixed;bottom:28px;right:28px;background:var(--navy);color:#fff;padding:12px 22px;border-radius:12px;font-weight:600;font-size:13px;box-shadow:var(--shadow-lg);opacity:0;transform:translateY(14px);transition:all .3s;z-index:9990;max-width:300px;}
+.toast.show{opacity:1;transform:translateY(0);}
+.toast.ok{background:var(--success);}
+.toast.bad{background:var(--error);}
+
+/* Responsive */
+@media(max-width:640px){
+  .analysis-grid,.job-grid,.row2,.score-grid3{grid-template-columns:1fr;}
+  .auth-card{padding:28px 20px;}
+  .wizard-card{padding:24px 16px;}
+  .topbar{padding:0 16px;}
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="logo-wrap">
+    <img id="logo-img" src="" alt="Yogya">
+  </div>
+  <div class="topbar-nav" id="topbar-nav">
+    <button class="tbtn tbtn-outline" onclick="nav('login')">Login</button>
+    <button class="tbtn tbtn-solid" onclick="nav('signup')">Sign Up</button>
+  </div>
+</div>
+
+<!-- LOGIN -->
+<div class="page active" id="page-login">
+  <div class="auth-bg">
+    <div class="auth-card">
+      <div class="auth-logo"><img id="login-logo" src="" alt="Yogya"></div>
+      <div class="auth-title">Welcome Back</div>
+      <div class="auth-sub">Continue your journey from skill to capability.</div>
+      <div class="fld">
+        <label class="lbl">Email Address</label>
+        <input type="email" id="li-email" class="inp" placeholder="name@example.com">
+        <div class="err-msg" id="li-email-err"></div>
+      </div>
+      <div class="fld">
+        <label class="lbl">Password <span style="float:right;font-size:11px;color:var(--teal);cursor:pointer;font-weight:600">Forgot Password?</span></label>
+        <input type="password" id="li-pass" class="inp" placeholder="Your password">
+        <div class="err-msg" id="li-pass-err"></div>
+      </div>
+      <button class="btn-main" onclick="doLogin()">Login</button>
+      <div class="switch-txt">Don't have an account? <a onclick="nav('signup')">Sign Up</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- SIGNUP -->
+<div class="page" id="page-signup">
+  <div class="wizard-wrap">
+    <div class="wizard-card">
+      <div class="auth-logo" style="margin-bottom:16px"><img src="" id="su-logo" alt="Yogya" style="height:44px"></div>
+      <!-- Progress -->
+      <div class="progress-bar" id="prog-bar">
+        <div class="step-wrap curr" id="sw0"><div class="step-dot">1</div><div class="step-lbl">Basic</div></div>
+        <div class="step-wrap" id="sw1"><div class="step-dot">2</div><div class="step-lbl">Academic</div></div>
+        <div class="step-wrap" id="sw2"><div class="step-dot">3</div><div class="step-lbl">Skills</div></div>
+      </div>
+      <!-- Step 1 -->
+      <div class="wiz-step active" id="ws1">
+        <div class="wiz-title">Basic Information</div>
+        <div class="wiz-sub">Let's start with your personal details.</div>
+        <div class="row2">
+          <div class="fld"><label class="lbl">Full Name *</label><input id="s1n" class="inp" placeholder="Full name"></div>
+          <div class="fld"><label class="lbl">Username *</label><input id="s1u" class="inp" placeholder="@username"></div>
+        </div>
+        <div class="fld"><label class="lbl">Email *</label><input type="email" id="s1e" class="inp" placeholder="email@example.com"><div class="err-msg" id="s1e-err"></div></div>
+        <div class="row2">
+          <div class="fld"><label class="lbl">Password *</label><input type="password" id="s1p" class="inp" placeholder="Min. 8 chars"></div>
+          <div class="fld"><label class="lbl">Confirm Password *</label><input type="password" id="s1cp" class="inp" placeholder="Repeat"></div>
+        </div>
+        <div class="fld"><label class="lbl">Phone (optional)</label><input id="s1ph" class="inp" placeholder="+91 98765 43210"></div>
+        <div class="wiz-actions">
+          <button class="btn-back" onclick="nav('login')">← Login</button>
+          <button class="btn-next" onclick="stepGo(2)">Continue →</button>
+        </div>
+      </div>
+      <!-- Step 2 -->
+      <div class="wiz-step" id="ws2">
+        <div class="wiz-title">Academic Details</div>
+        <div class="wiz-sub">Tell us about your educational background.</div>
+        <div class="fld">
+          <label class="lbl">You are a *</label>
+          <select id="stype" class="sel" onchange="onTypeChange()">
+            <option value="">-- Select --</option>
+            <option value="school">School Student</option>
+            <option value="college">College Student</option>
+            <option value="graduate">Graduate / Working Professional</option>
+          </select>
+        </div>
+        <!-- School -->
+        <div id="f-school" style="display:none">
+          <div class="fld"><label class="lbl">Current Class *</label>
+            <select id="sc-class" class="sel" onchange="onClassChange()">
+              <option value="">-- Select Class --</option>
+              <option value="6">Class 6</option><option value="7">Class 7</option><option value="8">Class 8</option>
+              <option value="9">Class 9</option><option value="10">Class 10</option><option value="11">Class 11</option><option value="12">Class 12</option>
+            </select>
+          </div>
+          <div id="sc-marks-fld" style="display:none" class="fld"><label class="lbl">10th Marks (%)</label><input type="number" id="sc-m10" class="inp" placeholder="e.g. 87.5" min="0" max="100"></div>
+          <div class="fld"><label class="lbl">School Name</label><input id="sc-sname" class="inp" placeholder="School name"></div>
+        </div>
+        <!-- College -->
+        <div id="f-college" style="display:none">
+          <div class="row2">
+            <div class="fld"><label class="lbl">10th Marks (%) *</label><input type="number" id="co-m10" class="inp" placeholder="e.g. 87.5"></div>
+            <div class="fld"><label class="lbl">12th Marks (%) *</label><input type="number" id="co-m12" class="inp" placeholder="e.g. 82.0"></div>
+          </div>
+          <div class="row2">
+            <div class="fld"><label class="lbl">Degree *</label>
+              <select id="co-deg" class="sel"><option value="">-- Select --</option><option value="btech">B.Tech</option><option value="bsc">B.Sc</option><option value="bca">BCA</option></select>
+            </div>
+            <div class="fld"><label class="lbl">Year *</label>
+              <select id="co-yr" class="sel"><option value="">-- Select --</option><option value="1">1st Year</option><option value="2">2nd Year</option><option value="3">3rd Year</option><option value="4">4th Year</option></select>
+            </div>
+          </div>
+          <div class="fld"><label class="lbl">College Name</label><input id="co-cname" class="inp" placeholder="College name"></div>
+        </div>
+        <!-- Graduate -->
+        <div id="f-grad" style="display:none">
+          <div class="row2">
+            <div class="fld"><label class="lbl">Qualification *</label>
+              <select id="gr-qual" class="sel"><option value="">-- Select --</option><option value="btech">B.Tech</option><option value="mtech">M.Tech</option><option value="mba">MBA</option><option value="msc">M.Sc</option><option value="other">Other</option></select>
+            </div>
+            <div class="fld"><label class="lbl">Experience *</label>
+              <select id="gr-exp" class="sel"><option value="">-- Select --</option><option value="0">Fresher</option><option value="1">1 year</option><option value="2">2 years</option><option value="3">3 years</option><option value="4">4 years</option><option value="5+">5+ years</option></select>
+            </div>
+          </div>
+          <div class="fld"><label class="lbl">Last / Current Role</label><input id="gr-role" class="inp" placeholder="e.g. Software Engineer at XYZ"></div>
+          <div class="fld"><label class="lbl">Company</label><input id="gr-co" class="inp" placeholder="Company name"></div>
+        </div>
+        <div class="wiz-actions">
+          <button class="btn-back" onclick="stepGo(1)">← Back</button>
+          <button class="btn-next" onclick="stepGo(3)">Continue →</button>
+        </div>
+      </div>
+      <!-- Step 3 -->
+      <div class="wiz-step" id="ws3">
+        <div class="wiz-title">Skills & Goals</div>
+        <div class="wiz-sub">Select your current skills and career goal.</div>
+        <div class="fld">
+          <label class="lbl">Career Goal *</label>
+          <select id="s3g" class="sel">
+            <option value="">-- Select Goal --</option>
+            <option value="software_dev">Goal 1: Software Developer</option>
+            <option value="ml_engineer">Goal 2: ML Engineer</option>
+            <option value="data_analyst">Goal 3: Data Analyst</option>
+          </select>
+        </div>
+        <div class="fld">
+          <label class="lbl">Your Skills (select all that apply)</label>
+          <div class="skill-grid" id="su-skills"></div>
+        </div>
+        <div class="fld" style="margin-top:14px">
+          <label class="lbl">Experience / Achievements</label>
+          <select id="s3ex" class="sel">
+            <option value="">-- Select --</option>
+            <option value="hackathon_win">🏆 Won a Hackathon</option>
+            <option value="hackathon_part">🧑‍💻 Participated in Hackathon</option>
+            <option value="internship">💼 Internship</option>
+            <option value="freelance">🌐 Freelance Projects</option>
+            <option value="open_source">🔧 Open Source Contributions</option>
+            <option value="research">📄 Research Publication</option>
+            <option value="not_yet">🌱 Not yet – eager to learn!</option>
+          </select>
+        </div>
+        <div class="fld">
+          <label class="lbl">Upload Resume (optional)</label>
+          <div class="upload-zone" id="su-rzone" onclick="document.getElementById('su-rfile').click()">
+            <div id="su-rtext">📄 Click to upload PDF</div>
+            <input type="file" id="su-rfile" accept=".pdf" style="display:none" onchange="onSuResume(this)">
+          </div>
+        </div>
+        <div class="wiz-actions">
+          <button class="btn-back" onclick="stepGo(2)">← Back</button>
+          <button class="btn-next" style="flex:1;max-width:none" id="su-submit" onclick="doSignup()">🎉 Create Account</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SUCCESS -->
+<div class="page" id="page-success">
+  <div class="success-wrap">
+    <div class="success-card">
+      <div class="success-icon">🎉</div>
+      <div style="font-family:'Sora',sans-serif;font-size:26px;font-weight:700;color:var(--navy);margin-bottom:8px">Account Created!</div>
+      <div style="color:var(--muted);margin-bottom:28px">Welcome to Yogya. Your journey begins now.</div>
+      <button class="btn-main" style="max-width:260px;margin:0 auto" onclick="nav('dashboard')">Go to Dashboard →</button>
+    </div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="page" id="page-dashboard">
+  <div class="dash-wrap">
+    <div class="dash-greet">Hello, <span id="d-name">User</span> 👋</div>
+    <div class="dash-sub">Your learning command centre.</div>
+
+    <!-- Quiz card -->
+    <div class="quiz-dash-card" id="qdc" onclick="nav('quiz')">
+      <div class="qdc-inner" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+        <div>
+          <div class="qdc-tag">Daily Challenge</div>
+          <div class="qdc-title">🎯 Today's Quiz</div>
+          <div class="qdc-sub" id="qdc-sub">Answer 3 questions · Earn up to 30 XP</div>
+        </div>
+        <div class="qdc-right">
+          <div class="qdc-num" id="qdc-left">3</div>
+          <div class="qdc-numlab">questions left</div>
+        </div>
+      </div>
+      <div class="qdc-bars" id="qdc-bars">
+        <div class="qdc-bar"></div><div class="qdc-bar"></div><div class="qdc-bar"></div>
+      </div>
+    </div>
+
+    <!-- Main cards -->
+    <div class="dash-cards">
+      <div class="dash-card dc-navy" onclick="nav('gap')">
+        <div class="dc-icon">📊</div>
+        <div class="dc-title">Goal-Gap Analysis</div>
+        <div class="dc-desc">Discover your skill gaps and which roles you can target right now.</div>
+        <span class="badge badge-blue">Skill Insights</span>
+      </div>
+      <div class="dash-card dc-teal" onclick="nav('resume')">
+        <div class="dc-icon">📄</div>
+        <div class="dc-title">Resume Analysis</div>
+        <div class="dc-desc">AI analysis of your resume against your target job role.</div>
+        <span class="badge badge-teal">AI Powered</span>
+      </div>
+      <div class="dash-card dc-gold" onclick="nav('mocktest')">
+        <div class="dc-icon">🧠</div>
+        <div class="dc-title">AI Mock Test</div>
+        <div class="dc-desc">Choose any topic, get AI-generated MCQs, and receive personalized feedback to improve fast.</div>
+        <span class="badge badge-gold">AI Powered ✨</span>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-icon" style="background:#e0e7ff">🎯</div><div><div class="stat-lbl">Goal</div><div class="stat-val" id="d-goal">–</div></div></div>
+      <div class="stat-card"><div class="stat-icon" style="background:#e0f7fa">💡</div><div><div class="stat-lbl">Skills</div><div class="stat-val" id="d-skills">0</div></div></div>
+      <div class="stat-card"><div class="stat-icon" style="background:#fef3c7">📋</div><div><div class="stat-lbl">Resume</div><div class="stat-val" id="d-resume">Not Added</div></div></div>
+      <div class="stat-card gold-bg" onclick="nav('score')"><div class="stat-icon" style="background:rgba(245,158,11,.2)">⭐</div><div><div class="stat-lbl">Total XP</div><div class="stat-val" id="d-xp">0</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div class="page" id="page-quiz">
+  <div class="narrow-wrap">
+    <div class="back-link" onclick="nav('dashboard')">← Back to Dashboard</div>
+    <div class="quiz-header">
+      <div>
+        <div style="font-family:'Sora',sans-serif;font-size:20px;font-weight:800;color:var(--navy)">🎯 Daily Quiz</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:2px">3 questions from your skills · Resets daily</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <div class="q-dots" id="q-dots"><div class="qdot active"></div><div class="qdot"></div><div class="qdot"></div></div>
+        <div class="session-xp">⭐ <span id="q-session-xp">0</span> XP</div>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div id="q-loading" style="display:none">
+      <div class="q-card"><div class="q-loading"><div class="spinner"></div><p style="color:var(--muted);font-size:13px">Generating personalised questions with AI...</p></div></div>
+    </div>
+
+    <!-- Question -->
+    <div id="q-wrap" style="display:none">
+      <div class="q-card">
+        <div class="q-skill-badge" id="q-stag">Python</div>
+        <div class="q-num" id="q-num">Question 1 of 3</div>
+        <div class="q-text" id="q-text">Loading...</div>
+        <div class="q-opts" id="q-opts"></div>
+        <div class="q-feedback" id="q-feedback">
+          <span id="q-ficon" style="font-size:18px">✅</span>
+          <div><div id="q-ftxt"></div><div class="q-exp" id="q-fexp"></div></div>
+        </div>
+      </div>
+      <button class="btn-next-q" id="btn-nq" onclick="nextQ()" disabled>Next Question →</button>
+    </div>
+
+    <!-- Done today -->
+    <div id="q-done-today" style="display:none">
+      <div class="quiz-done-card">
+        <div style="font-size:60px;margin-bottom:14px">🎉</div>
+        <div style="font-family:'Sora',sans-serif;font-size:22px;font-weight:800;color:var(--navy);margin-bottom:6px">Quiz Done for Today!</div>
+        <div style="color:var(--muted);margin-bottom:16px">Come back tomorrow for fresh questions!</div>
+        <div class="xp-pill-big">⭐ <span id="q-today-xp">0</span> XP Today</div>
+        <div class="quiz-btns"><button class="btn-ghost" onclick="nav('dashboard')">← Dashboard</button><button class="btn-gold" onclick="nav('score')">View Score ⭐</button></div>
+      </div>
+    </div>
+
+    <!-- Session complete -->
+    <div id="q-complete" style="display:none">
+      <div class="quiz-done-card">
+        <div style="font-size:60px;margin-bottom:14px" id="q-comp-emoji">🎊</div>
+        <div style="font-family:'Sora',sans-serif;font-size:22px;font-weight:800;color:var(--navy);margin-bottom:6px" id="q-comp-title">Quiz Complete!</div>
+        <div style="color:var(--muted);margin-bottom:16px" id="q-comp-sub">Great job!</div>
+        <div class="xp-pill-big">⭐ +<span id="q-comp-xp">0</span> XP</div>
+        <div style="font-size:13px;color:var(--muted);margin-top:6px"><span id="q-comp-score" style="font-weight:700;color:var(--navy)">0</span>/3 correct</div>
+        <div class="quiz-btns"><button class="btn-ghost" onclick="nav('dashboard')">← Dashboard</button><button class="btn-gold" onclick="nav('score')">View Score ⭐</button></div>
+      </div>
+    </div>
+
+    <!-- No skills -->
+    <div id="q-noskills" style="display:none">
+      <div class="quiz-empty-card">
+        <div style="font-size:60px;margin-bottom:14px">🤔</div>
+        <div style="font-family:'Sora',sans-serif;font-size:20px;font-weight:800;color:var(--navy);margin-bottom:8px">Add Skills First!</div>
+        <div style="color:var(--muted);margin-bottom:20px">Select at least one skill in your profile to unlock the daily quiz.</div>
+        <button class="btn-main" style="max-width:220px;margin:0 auto" onclick="nav('profile')">Go to Profile →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SCORE -->
+<div class="page" id="page-score">
+  <div class="narrow-wrap">
+    <div class="back-link" onclick="nav('dashboard')">← Back to Dashboard</div>
+    <div class="score-hero">
+      <div style="font-size:12px;opacity:.7;font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:6px">Your Total XP</div>
+      <div class="big-pts" id="sc-total">0</div>
+      <div style="font-size:13px;opacity:.7;margin-top:4px">points earned</div>
+      <div class="level-chip" id="sc-level">🌱 Beginner</div>
+      <div style="margin-top:12px;font-size:12px;opacity:.7" id="sc-to-next"></div>
+    </div>
+    <div class="score-grid3">
+      <div class="score-mini"><div style="font-size:26px;margin-bottom:4px">🎯</div><div class="score-mini-num" id="sc-quiz-pts">0</div><div class="score-mini-lbl">From Quizzes</div></div>
+      <div class="score-mini"><div style="font-size:26px;margin-bottom:4px">💡</div><div class="score-mini-num" id="sc-skill-pts">0</div><div class="score-mini-lbl">From Skills</div></div>
+      <div class="score-mini"><div style="font-size:26px;margin-bottom:4px">🔥</div><div class="score-mini-num" id="sc-streak">0</div><div class="score-mini-lbl">Day Streak</div></div>
+    </div>
+    <!-- Level bar -->
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+        <span style="font-family:'Sora',sans-serif;font-weight:700;color:var(--navy);font-size:13px" id="sc-cl">Beginner</span>
+        <span style="font-family:'Sora',sans-serif;font-weight:700;color:var(--teal);font-size:13px" id="sc-nl">Learner</span>
+      </div>
+      <div style="background:var(--border);border-radius:99px;height:10px">
+        <div id="sc-bar" style="height:10px;border-radius:99px;background:linear-gradient(90deg,var(--navy),var(--teal));transition:width 1s ease;width:0%"></div>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-top:6px;text-align:center" id="sc-xpnxt"></div>
+    </div>
+    <!-- History -->
+    <div class="card">
+      <div class="card-title">📜 XP History</div>
+      <div id="sc-history">
+        <table class="hist-table"><thead><tr><th>Activity</th><th>Date</th><th>XP</th></tr></thead><tbody id="sc-hist-body"></tbody></table>
+        <div id="sc-no-hist" style="text-align:center;padding:28px;color:var(--muted);display:none;font-size:13px">No activity yet. Start your daily quiz!</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- GAP ANALYSIS -->
+<div class="page" id="page-gap">
+  <div class="inner-wrap">
+    <div class="back-link" onclick="nav('dashboard')">← Back to Dashboard</div>
+    <div class="page-title">Goal-Gap Analysis</div>
+    <div class="page-sub">See where you stand and how to get to your goal.</div>
+    <div class="goal-sel-row">
+      <label style="font-weight:600;color:var(--navy);font-size:14px">Analysing for:</label>
+      <select id="gap-goal" class="sel" style="width:260px" onchange="renderGap()">
+        <option value="software_dev">Goal 1: Software Developer</option>
+        <option value="ml_engineer">Goal 2: ML Engineer</option>
+        <option value="data_analyst">Goal 3: Data Analyst</option>
+      </select>
+    </div>
+    <div class="analysis-grid">
+      <div class="card"><div class="card-title">📊 Skill Coverage</div><canvas id="gap-pie"></canvas></div>
+      <div class="card"><div class="card-title">📈 Readiness by Category</div><canvas id="gap-radar"></canvas></div>
+    </div>
+    <div class="card"><div class="card-title">💼 Job Roles You Can Target</div><div class="job-grid" id="gap-jobs"></div></div>
+    <div class="card"><div class="card-title">🗺️ Progress by Category</div><div id="gap-bars"></div></div>
+    <div class="card"><div class="card-title">✅ Skills You Have</div><div class="chips-wrap" id="gap-have"></div></div>
+    <div class="card"><div class="card-title">📚 Skills to Learn</div><div class="chips-wrap" id="gap-miss"></div></div>
+  </div>
+</div>
+
+<!-- RESUME -->
+<div class="page" id="page-resume">
+  <div class="narrow-wrap">
+    <div class="back-link" onclick="nav('dashboard')">← Back to Dashboard</div>
+    <div class="page-title">Resume Analysis</div>
+    <div class="page-sub">AI-powered analysis of your resume against your target role.</div>
+    <div id="r-noresume">
+      <div class="resume-empty">
+        <div style="font-size:60px;margin-bottom:16px">📭</div>
+        <div style="font-family:'Sora',sans-serif;font-size:18px;font-weight:700;color:var(--navy);margin-bottom:8px">Resume Not Added Yet</div>
+        <div style="color:var(--muted);margin-bottom:20px">Upload your resume in your profile to unlock AI analysis.</div>
+        <button class="btn-main" style="max-width:220px;margin:0 auto" onclick="nav('profile')">Go to Profile →</button>
+      </div>
+    </div>
+    <div id="r-hasresume" style="display:none">
+      <div class="card">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:18px">
+          <div>
+            <label class="lbl">Analysing for:</label>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">Change role to re-analyse</div>
+          </div>
+          <select id="r-goal" class="sel" style="width:240px">
+            <option value="software_dev">Goal 1: Software Developer</option>
+            <option value="ml_engineer">Goal 2: ML Engineer</option>
+            <option value="data_analyst">Goal 3: Data Analyst</option>
+          </select>
+        </div>
+        <div style="background:#f8faff;border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:12px;margin-bottom:18px">
+          <span style="font-size:22px">📄</span>
+          <div style="flex:1"><div style="font-weight:600;color:var(--navy);font-size:13px" id="r-fname">resume.pdf</div><div style="font-size:11px;color:var(--muted)">Uploaded</div></div>
+          <button onclick="nav('profile')" style="font-size:12px;font-weight:600;color:var(--navy);border:1.5px solid var(--border);background:#fff;padding:6px 14px;border-radius:8px;cursor:pointer">Change</button>
+        </div>
+        <button class="btn-main" onclick="doResumeAI()">🤖 Analyse with AI</button>
+      </div>
+      <div id="r-result" style="display:none">
+        <div class="ai-result-wrap">
+          <div style="font-family:'Sora',sans-serif;font-weight:700;color:var(--navy);margin-bottom:14px;font-size:15px">🤖 AI Resume Analysis</div>
+          <div style="display:flex;align-items:center;gap:16px;background:#fff;border-radius:12px;padding:14px 18px;margin-bottom:14px;box-shadow:0 2px 8px rgba(0,0,0,.06)">
+            <div class="score-big" id="r-score">–</div>
+            <div><div style="font-weight:700;color:var(--navy);font-size:14px">Match Score</div><div style="font-size:12px;color:var(--muted)" id="r-score-label">for target role</div></div>
+          </div>
+          <div id="r-tips"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE -->
+<!-- ═══════════════════════════════ MOCK TEST PAGE ═══════════════════════════════ -->
+<div class="page" id="page-mocktest">
+  <div class="inner-wrap" style="max-width:800px">
+
+    <!-- SECTION: LOCKED (skill < 50%) -->
+    <div id="mt-locked" style="display:none;text-align:center;padding:80px 20px;">
+      <div style="font-size:64px;margin-bottom:16px;">🔒</div>
+      <div style="font-family:'Sora',sans-serif;font-size:22px;font-weight:800;color:var(--navy);margin-bottom:8px;">Mock Test Locked</div>
+      <div style="color:var(--muted);font-size:14px;line-height:1.7;max-width:400px;margin:0 auto 12px;">You need to have <strong>at least 50% of skills</strong> in your goal domain to unlock the Mock Test.<br>Complete more skills in your profile!</div>
+      <div id="mt-lock-progress" style="background:#e2e8f0;border-radius:99px;height:12px;max-width:300px;margin:16px auto;overflow:hidden;">
+        <div id="mt-lock-fill" style="height:100%;background:linear-gradient(90deg,var(--teal),var(--navy));border-radius:99px;transition:width .6s;width:0%"></div>
+      </div>
+      <div id="mt-lock-pct" style="font-family:'Sora',sans-serif;font-weight:700;color:var(--navy);margin-bottom:20px;">0% skills covered</div>
+      <button class="btn-main" style="max-width:220px;margin:0 auto" onclick="nav('profile')">Add Skills in Profile →</button>
+    </div>
+
+    <!-- SECTION: SELECT -->
+    <div id="mt-select" style="display:none;">
+      <div class="back-link" onclick="nav('dashboard')">← Back to Dashboard</div>
+      <div class="mock-hero">
+        <div class="mock-hero-inner">
+          <div class="mock-hero-tag">🔓 Unlocked · AI Powered</div>
+          <div class="mock-hero-title">🧠 Domain Mock Test</div>
+          <div class="mock-hero-sub">Full domain test · 20 questions · Timed · AI feedback at the end</div>
+        </div>
+      </div>
+
+      <div class="mock-config">
+        <div class="mock-config-title">Select Difficulty Level</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;">
+          <button class="level-card" id="lvl-beginner" onclick="selectLevel('beginner',this)">
+            <div style="font-size:28px;margin-bottom:6px">🌱</div>
+            <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:14px;color:var(--navy)">Beginner</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:3px">Basic concepts & fundamentals</div>
+          </button>
+          <button class="level-card" id="lvl-intermediate" onclick="selectLevel('intermediate',this)">
+            <div style="font-size:28px;margin-bottom:6px">⚡</div>
+            <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:14px;color:var(--navy)">Intermediate</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:3px">Applied knowledge & problem solving</div>
+          </button>
+          <button class="level-card" id="lvl-advanced" onclick="selectLevel('advanced',this)">
+            <div style="font-size:28px;margin-bottom:6px">🔥</div>
+            <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:14px;color:var(--navy)">Advanced</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:3px">Deep concepts & tricky scenarios</div>
+          </button>
+        </div>
+        <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:12px;padding:14px 16px;margin-bottom:16px;font-size:13px;color:#0369a1;display:flex;align-items:center;gap:10px;">
+          <span style="font-size:18px">ℹ️</span>
+          <div><strong>20 questions</strong> covering your full <strong id="mt-domain-name">domain</strong> · <strong>30 minutes timer</strong> · Results shown at the end</div>
+        </div>
+        <button class="btn-start-mock" id="mt-start-btn" onclick="startMockTest()" disabled>
+          🚀 Start Mock Test
+        </button>
+      </div>
+    </div>
+
+    <!-- SECTION: LOADING -->
+    <div id="mt-loading" style="display:none;text-align:center;padding:80px 20px;">
+      <div style="width:52px;height:52px;border:5px solid #e2e8f0;border-top-color:var(--teal);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 20px;"></div>
+      <div style="font-family:'Sora',sans-serif;font-weight:800;color:var(--navy);font-size:18px;">Generating your test...</div>
+      <div style="color:var(--muted);font-size:13px;margin-top:6px;">AI is preparing 20 domain-wide questions for you</div>
+    </div>
+
+    <!-- SECTION: TEST -->
+    <div id="mt-test" style="display:none;">
+      <!-- Sticky test header -->
+      <div style="background:#fff;border-radius:16px;padding:14px 20px;box-shadow:var(--shadow);margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;position:sticky;top:70px;z-index:50;">
+        <div>
+          <div style="font-family:'Sora',sans-serif;font-weight:800;color:var(--navy);font-size:15px;" id="mt-test-title">Mock Test</div>
+          <div style="font-size:11px;color:var(--muted);" id="mt-test-sub">20 Questions · Beginner</div>
+        </div>
+        <!-- Timer -->
+        <div id="mt-timer" style="background:linear-gradient(135deg,var(--navy),var(--teal));color:#fff;font-family:'Sora',sans-serif;font-weight:800;font-size:20px;padding:8px 18px;border-radius:12px;min-width:90px;text-align:center;transition:background .3s;">⏱ <span id="mt-timer-txt">30:00</span></div>
+        <!-- Progress -->
+        <div style="font-size:12px;color:var(--muted);font-weight:600;"><span id="mt-answered-count">0</span>/<span id="mt-total-count">20</span> answered</div>
+      </div>
+
+      <!-- Progress bar -->
+      <div class="mock-progress-bar" style="margin-bottom:14px;"><div class="mock-progress-fill" id="mt-progress" style="width:0%"></div></div>
+
+      <!-- Question dots scroll -->
+      <div style="background:#fff;border-radius:12px;padding:12px 14px;box-shadow:var(--shadow);margin-bottom:16px;overflow-x:auto;">
+        <div class="mock-q-dots" id="mt-dots" style="flex-wrap:nowrap;min-width:max-content;"></div>
+      </div>
+
+      <!-- Question card -->
+      <div class="mock-q-card">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+          <span class="mock-diff-tag" id="mt-diff-tag">medium</span>
+          <span style="font-size:11px;color:var(--muted);font-weight:600;" id="mt-q-topic-tag"></span>
+        </div>
+        <div class="mock-q-num" id="mt-q-num">Question 1 of 20</div>
+        <div class="mock-q-text" id="mt-q-text">Loading...</div>
+        <div class="mock-opts" id="mt-opts"></div>
+      </div>
+
+      <!-- Nav -->
+      <div class="mock-nav" style="margin-top:14px;">
+        <button class="btn-ghost" onclick="mockNavQ(-1)" id="mt-prev-btn">← Prev</button>
+        <span style="font-size:12px;color:var(--muted);font-weight:600;">Q <span id="mt-cur-num">1</span> / <span id="mt-tot-num">20</span></span>
+        <button class="btn-teal" onclick="mockNavQ(1)" id="mt-next-btn">Next →</button>
+      </div>
+
+      <!-- Submit -->
+      <div style="margin-top:16px;text-align:center;">
+        <button class="btn-submit-mock" onclick="confirmSubmit()" style="max-width:280px;">✅ Submit Test & See Results</button>
+      </div>
+    </div>
+
+    <!-- SECTION: RESULTS -->
+    <div id="mt-results" style="display:none;">
+      <div class="mock-result-hero" id="mt-result-hero">
+        <div style="font-size:48px;margin-bottom:8px;" id="mt-result-emoji">🎉</div>
+        <div class="mock-result-score" id="mt-result-score">0%</div>
+        <div class="mock-result-label" id="mt-result-badge">Test Complete!</div>
+        <div class="mock-result-detail" id="mt-result-detail">0/20 correct</div>
+        <div id="mt-result-time" style="margin-top:6px;font-size:12px;opacity:.75;">Time taken: –</div>
+      </div>
+
+      <!-- Stats row -->
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;">
+        <div style="background:#fff;border-radius:14px;padding:16px;box-shadow:var(--shadow);text-align:center;">
+          <div style="font-size:22px;margin-bottom:4px;">✅</div>
+          <div style="font-family:'Sora',sans-serif;font-weight:800;font-size:22px;color:var(--success);" id="mt-stat-correct">0</div>
+          <div style="font-size:11px;color:var(--muted);">Correct</div>
+        </div>
+        <div style="background:#fff;border-radius:14px;padding:16px;box-shadow:var(--shadow);text-align:center;">
+          <div style="font-size:22px;margin-bottom:4px;">❌</div>
+          <div style="font-family:'Sora',sans-serif;font-weight:800;font-size:22px;color:var(--error);" id="mt-stat-wrong">0</div>
+          <div style="font-size:11px;color:var(--muted);">Wrong</div>
+        </div>
+        <div style="background:#fff;border-radius:14px;padding:16px;box-shadow:var(--shadow);text-align:center;">
+          <div style="font-size:22px;margin-bottom:4px;">⏭️</div>
+          <div style="font-family:'Sora',sans-serif;font-weight:800;font-size:22px;color:var(--warning);" id="mt-stat-skip">0</div>
+          <div style="font-size:11px;color:var(--muted);">Skipped</div>
+        </div>
+      </div>
+
+      <!-- AI Feedback -->
+      <div class="mock-ai-feedback">
+        <div class="card-title">🤖 AI Feedback</div>
+        <div id="mt-ai-loading" style="color:var(--muted);font-size:13px;display:flex;align-items:center;gap:8px;"><div style="width:16px;height:16px;border:2px solid #e2e8f0;border-top-color:var(--teal);border-radius:50%;animation:spin 1s linear infinite;flex-shrink:0;"></div> Analysing your performance...</div>
+        <div id="mt-ai-body" style="display:none;">
+          <div id="mt-ai-summary" style="font-size:14px;color:var(--text);line-height:1.7;margin-bottom:14px;"></div>
+          <div id="mt-focus-section" style="display:none;margin-bottom:14px;">
+            <div style="font-size:11px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">📌 Focus Areas</div>
+            <div class="mock-focus-chips" id="mt-focus-chips"></div>
+          </div>
+          <div id="mt-resources-section" style="display:none;">
+            <div style="font-size:11px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;">📚 Resources to Study</div>
+            <ul id="mt-resources-list" style="padding-left:18px;font-size:13px;color:var(--muted);line-height:2.2;margin:0;"></ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Review -->
+      <div style="font-family:'Sora',sans-serif;font-weight:700;color:var(--navy);font-size:15px;margin-bottom:12px;">📋 Full Question Review</div>
+      <div id="mt-review-list"></div>
+
+      <div style="display:flex;gap:12px;margin-top:20px;flex-wrap:wrap;">
+        <button class="btn-main" style="flex:1;padding:13px" onclick="resetMockTest()">🔄 Retake Test</button>
+        <button class="btn-ghost" style="padding:13px 20px" onclick="nav('dashboard')">← Dashboard</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="page" id="page-profile">
+  <div class="narrow-wrap">
+    <div class="back-link" onclick="nav('dashboard')">← Back to Dashboard</div>
+    <div class="profile-header">
+      <div class="avatar" id="p-avatar">U</div>
+      <div style="flex:1">
+        <div style="font-family:'Sora',sans-serif;font-size:22px;font-weight:700" id="p-hname">User</div>
+        <div style="font-size:13px;opacity:.75;margin-top:3px" id="p-htype">–</div>
+      </div>
+      <button onclick="doLogout()" style="border:2px solid rgba(255,255,255,.4);background:transparent;color:#fff;font-weight:700;border-radius:10px;padding:9px 18px;cursor:pointer;font-family:'Sora',sans-serif;font-size:13px">Logout</button>
+    </div>
+    <div class="card">
+      <div class="sec-title">✏️ Basic Information</div>
+      <div class="row2">
+        <div class="fld"><label class="lbl">Full Name</label><input id="p-name" class="inp"></div>
+        <div class="fld"><label class="lbl">Username</label><input id="p-user" class="inp"></div>
+      </div>
+      <div class="fld"><label class="lbl">Email (cannot change)</label><input id="p-email" class="inp" readonly style="background:#f5f5f5;cursor:not-allowed"></div>
+      <div class="fld"><label class="lbl">Phone</label><input id="p-phone" class="inp"></div>
+    </div>
+    <div class="card">
+      <div class="sec-title">🎓 Academic Details</div>
+      <div id="p-acad"></div>
+    </div>
+    <div class="card">
+      <div class="sec-title">🎯 Goal & Skills</div>
+      <div class="fld">
+        <label class="lbl">Career Goal</label>
+        <select id="p-goal" class="sel">
+          <option value="software_dev">Goal 1: Software Developer</option>
+          <option value="ml_engineer">Goal 2: ML Engineer</option>
+          <option value="data_analyst">Goal 3: Data Analyst</option>
+        </select>
+      </div>
+      <div class="fld">
+        <label class="lbl">Your Skills (<span id="p-skill-count">0</span> selected)</label>
+        <div class="skill-grid" id="p-skills"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="sec-title">📄 Resume</div>
+      <div id="p-resume-info" style="display:none;margin-bottom:12px">
+        <div style="display:flex;align-items:center;gap:12px;background:#f0fdf4;border:1px solid #6ee7b7;border-radius:10px;padding:12px 14px">
+          <span style="font-size:20px">✅</span>
+          <div style="flex:1"><div style="font-weight:600;color:var(--navy);font-size:13px" id="p-resume-name">resume.pdf</div></div>
+          <button onclick="removeResume()" style="font-size:11px;color:var(--error);border:1px solid #fca5a5;background:#fff;padding:5px 12px;border-radius:7px;cursor:pointer;font-weight:600">Remove</button>
+        </div>
+      </div>
+      <div class="upload-zone" id="p-rzone" onclick="document.getElementById('p-rfile').click()">
+        <div id="p-rtext">📄 Click to upload / replace PDF resume</div>
+        <input type="file" id="p-rfile" accept=".pdf" style="display:none" onchange="onProfileResume(this)">
+      </div>
+    </div>
+    <button class="btn-main" style="max-width:240px" onclick="saveProfile()">💾 Save Changes</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ==================== CONSTANTS ====================
+const LOGO_SRC = 'data:image/jpeg;base64,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';
+
+const ALL_SKILLS = [
+  'Data Structures','Algorithms','OOP','DBMS','Computer Networks','OS Concepts','System Design',
+  'Java','C++','Python','JavaScript','TypeScript','C#','Go','Rust',
+  'HTML5','CSS3','React','Angular','Vue','Tailwind CSS','Redux',
+  'Node.js','Express.js','Spring Boot','Django','Flask','REST APIs','GraphQL','JWT/OAuth',
+  'MySQL','PostgreSQL','MongoDB','Redis','Firebase',
+  'Git & GitHub','Docker','Kubernetes','CI/CD','AWS','Azure','GCP','Linux',
+  'NumPy','Pandas','Matplotlib','Scikit-learn','TensorFlow','Keras','PyTorch',
+  'Supervised Learning','Unsupervised Learning','Deep Learning','NLP','Computer Vision',
+  'Linear Algebra','Statistics','Calculus','Probability',
+  'SQL','Power BI','Tableau','Excel','Data Cleaning','Feature Engineering'
+];
+
+const GOAL_DATA = {
+  software_dev:{name:'Software Developer',categories:{'CS Fundamentals':['Data Structures','Algorithms','OOP','DBMS','Computer Networks','OS Concepts','System Design'],'Languages':['Java','C++','Python','JavaScript','TypeScript'],'Frontend':['HTML5','CSS3','React','Angular','Vue','Tailwind CSS','Redux'],'Backend':['Node.js','Express.js','Spring Boot','Django','Flask','REST APIs','GraphQL','JWT/OAuth'],'Databases':['MySQL','PostgreSQL','MongoDB','Redis','Firebase'],'DevOps':['Git & GitHub','Docker','Kubernetes','CI/CD','AWS','Linux']},jobs:[{title:'Frontend Developer',thr:35,skills:['HTML5','CSS3','JavaScript','React']},{title:'Backend Developer',thr:40,skills:['Node.js','REST APIs','MySQL','Java']},{title:'Full Stack Developer',thr:55,skills:['React','Node.js','MongoDB','REST APIs']},{title:'DevOps Engineer',thr:45,skills:['Docker','CI/CD','AWS','Linux']},{title:'Junior Software Engineer',thr:25,skills:['Data Structures','OOP','Java','Python']}]},
+  ml_engineer:{name:'ML Engineer',categories:{'Mathematics':['Linear Algebra','Statistics','Calculus','Probability'],'Programming':['Python','NumPy','Pandas','Matplotlib','SQL','Git & GitHub'],'ML Concepts':['Supervised Learning','Unsupervised Learning','Scikit-learn','Feature Engineering','Data Cleaning'],'Deep Learning':['Deep Learning','TensorFlow','Keras','PyTorch','NLP','Computer Vision'],'MLOps':['Docker','AWS','CI/CD']},jobs:[{title:'Junior ML Engineer',thr:30,skills:['Python','NumPy','Pandas','Supervised Learning']},{title:'Data Scientist',thr:45,skills:['Python','Statistics','Scikit-learn','SQL']},{title:'Deep Learning Engineer',thr:55,skills:['Deep Learning','TensorFlow','PyTorch','NLP']},{title:'ML Researcher',thr:65,skills:['Linear Algebra','Calculus','Deep Learning','PyTorch']}]},
+  data_analyst:{name:'Data Analyst',categories:{'Core Tools':['SQL','Python','Excel','Power BI','Tableau'],'Statistics':['Statistics','Probability','Linear Algebra'],'Programming':['Python','Pandas','NumPy','Matplotlib'],'ML Basics':['Supervised Learning','Data Cleaning','Feature Engineering']},jobs:[{title:'Junior Data Analyst',thr:25,skills:['SQL','Excel','Python']},{title:'Business Analyst',thr:35,skills:['SQL','Excel','Statistics','Power BI']},{title:'Data Analyst',thr:45,skills:['Python','SQL','Statistics','Tableau']},{title:'Senior Data Analyst',thr:60,skills:['Python','SQL','Statistics','Tableau','Power BI']}]}
+};
+
+const LEVELS=[
+  {name:'🌱 Beginner',min:0,max:199},{name:'📘 Learner',min:200,max:499},
+  {name:'⚡ Practitioner',min:500,max:999},{name:'🔥 Skilled',min:1000,max:1999},
+  {name:'💎 Advanced',min:2000,max:3999},{name:'🚀 Expert',min:4000,max:7999},
+  {name:'👑 Master',min:8000,max:Infinity}
+];
+
+const GOAL_NAMES = {software_dev:'Software Developer',ml_engineer:'ML Engineer',data_analyst:'Data Analyst'};
+const TODAY = new Date().toDateString();
+
+// ==================== STATE ====================
+let CU = null; // current user
+let pSkills = []; // profile skills
+let pieChart = null, radarChart = null;
+
+// Quiz state
+let qqList = []; // quiz questions
+let qqIdx = 0;
+let qSessionXP = 0;
+let qCorrect = 0;
+let qAnswered = false;
+
+// ==================== INIT ====================
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('#logo-img,#login-logo,#su-logo').forEach(el => el.src = LOGO_SRC);
+  // skill grids built lazily
+  const saved = localStorage.getItem('yogya_user');
+  if (saved) { CU = JSON.parse(saved); nav('dashboard'); }
+});
+
+// ==================== NAVIGATION ====================
+function nav(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  window.scrollTo(0, 0);
+  renderTopbar(page);
+  if (page === 'dashboard') renderDashboard();
+  if (page === 'quiz') initQuiz();
+  if (page === 'signup') { buildSkillGrid('su-skills', suSkills); }
+  if (page === 'score') renderScore();
+  if (page === 'gap') initGap();
+  if (page === 'resume') initResume();
+  if (page === 'mocktest') initMockTest();
+  if (page === 'profile') initProfile();
+}
+
+function renderTopbar(page) {
+  const nav_el = document.getElementById('topbar-nav');
+  if (CU && !['login','signup','success'].includes(page)) {
+    const sc = getScore();
+    nav_el.innerHTML = `
+      <div class="xp-pill" onclick="nav('score')">⭐ ${sc.total} XP</div>
+      <span class="hi-name">Hi, ${CU.name.split(' ')[0]}</span>
+      <button class="tbtn tbtn-outline" onclick="nav('profile')">Profile</button>`;
+  } else {
+    nav_el.innerHTML = `
+      <button class="tbtn tbtn-outline" onclick="nav('login')">Login</button>
+      <button class="tbtn tbtn-solid" onclick="nav('signup')">Sign Up</button>`;
+  }
+}
+
+// ==================== SCORE / XP ====================
+function getScore() {
+  if (!CU) return {total:0,quizPts:0,skillPts:0,history:[],streak:0,lastQuizDate:null,quizAnswered:[],quizXpToday:0,lastStreakDate:null};
+  const k = 'yogya_sc_' + CU.email;
+  return JSON.parse(localStorage.getItem(k)||'null') || {total:0,quizPts:0,skillPts:0,history:[],streak:0,lastQuizDate:null,quizAnswered:[],quizXpToday:0,lastStreakDate:null};
+}
+
+function saveScore(sc) {
+  if (!CU) return;
+  localStorage.setItem('yogya_sc_' + CU.email, JSON.stringify(sc));
+}
+
+function addXP(amount, reason, type) {
+  const sc = getScore();
+  sc.total += amount;
+  if (type === 'quiz') sc.quizPts = (sc.quizPts||0) + amount;
+  if (type === 'skill') sc.skillPts = (sc.skillPts||0) + amount;
+  sc.history = sc.history || [];
+  sc.history.unshift({reason, pts:amount, date: new Date().toLocaleDateString('en-IN')});
+  if (sc.history.length > 50) sc.history = sc.history.slice(0,50);
+  saveScore(sc);
+  floatXP(amount);
+  renderTopbar(document.querySelector('.page.active')?.id?.replace('page-','') || '');
+}
+
+function floatXP(pts) {
+  const el = document.createElement('div');
+  el.className = 'xp-floater';
+  el.textContent = '+' + pts + ' XP ⭐';
+  const x = Math.random() * (window.innerWidth - 200) + 50;
+  const y = window.innerHeight / 2;
+  el.style.cssText = `left:${x}px;top:${y}px`;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 1300);
+}
+
+function getLevel(pts) { return LEVELS.find(l => pts >= l.min && pts <= l.max) || LEVELS[0]; }
+function getNextLevel(pts) { const i = LEVELS.findIndex(l => pts >= l.min && pts <= l.max); return i < LEVELS.length-1 ? LEVELS[i+1] : null; }
+
+function renderScore() {
+  const sc = getScore();
+  document.getElementById('sc-total').textContent = sc.total;
+  document.getElementById('sc-quiz-pts').textContent = sc.quizPts||0;
+  document.getElementById('sc-skill-pts').textContent = sc.skillPts||0;
+  document.getElementById('sc-streak').textContent = sc.streak||0;
+  const lv = getLevel(sc.total);
+  const nl = getNextLevel(sc.total);
+  document.getElementById('sc-level').textContent = lv.name;
+  document.getElementById('sc-cl').textContent = lv.name;
+  if (nl) {
+    const pct = Math.round(((sc.total - lv.min)/(nl.min - lv.min))*100);
+    document.getElementById('sc-bar').style.width = pct + '%';
+    document.getElementById('sc-nl').textContent = nl.name;
+    document.getElementById('sc-xpnxt').textContent = `${nl.min - sc.total} XP to reach ${nl.name}`;
+    document.getElementById('sc-to-next').textContent = `${nl.min - sc.total} XP to ${nl.name}`;
+  } else {
+    document.getElementById('sc-bar').style.width = '100%';
+    document.getElementById('sc-nl').textContent = '👑 Max!';
+    document.getElementById('sc-xpnxt').textContent = "You've reached the highest level!";
+    document.getElementById('sc-to-next').textContent = '';
+  }
+  const tbody = document.getElementById('sc-hist-body');
+  tbody.innerHTML = '';
+  if ((sc.history||[]).length === 0) {
+    document.getElementById('sc-no-hist').style.display = 'block';
+    document.querySelector('.hist-table').style.display = 'none';
+  } else {
+    document.getElementById('sc-no-hist').style.display = 'none';
+    document.querySelector('.hist-table').style.display = 'table';
+    sc.history.slice(0,20).forEach(h => {
+      tbody.innerHTML += `<tr><td>${h.reason}</td><td style="color:var(--muted)">${h.date}</td><td><span class="pts-tag">⭐ +${h.pts}</span></td></tr>`;
+    });
+  }
+}
+
+// ==================== QUIZ ====================
+async function initQuiz() {
+  if (!CU) return;
+  ['q-loading','q-wrap','q-done-today','q-complete','q-noskills'].forEach(id => {
+    const el = document.getElementById(id); if(el) el.style.display = 'none';
+  });
+  document.getElementById('q-session-xp').textContent = '0';
+
+  const skills = CU.skills || [];
+  if (skills.length === 0) { document.getElementById('q-noskills').style.display = 'block'; return; }
+
+  const sc = getScore();
+  // Already done today?
+  if (sc.lastQuizDate === TODAY && (sc.quizAnswered||[]).length >= 3) {
+    document.getElementById('q-today-xp').textContent = sc.quizXpToday || 0;
+    document.getElementById('q-done-today').style.display = 'block';
+    return;
+  }
+
+  // Fresh start or resume session
+  qSessionXP = 0; qCorrect = 0; qqIdx = 0; qAnswered = false;
+  resetQDots();
+  document.getElementById('q-loading').style.display = 'block';
+
+  // Generate questions
+  try {
+    await generateQuestions(skills);
+  } catch(e) {
+    console.warn('AI failed, using fallback:', e.message);
+    qqList = staticQuestions(skills);
+  }
+
+  document.getElementById('q-loading').style.display = 'none';
+
+  if (qqList.length === 0) { document.getElementById('q-noskills').style.display = 'block'; return; }
+
+  // Mark day
+  sc.lastQuizDate = TODAY;
+  sc.quizAnswered = [];
+  sc.quizXpToday = 0;
+  saveScore(sc);
+
+  showQuestion(0);
+  document.getElementById('q-wrap').style.display = 'block';
+}
+
+async function generateQuestions(skills) {
+  const shuffled = [...skills].sort(() => Math.random() - .5);
+  const picks = shuffled.slice(0, 3);
+  while (picks.length < 3) picks.push(picks[0]);
+
+  const prompt = `You are a technical quiz generator for a career platform.
+
+Generate exactly 3 unique multiple-choice questions, one per skill: ${picks.join(', ')}.
+
+Rules:
+- Practical, tests real understanding
+- 4 options (A-D), exactly one correct
+- Brief explanation for the correct answer
+- Intermediate difficulty
+
+Respond with ONLY valid JSON array, no markdown:
+[
+  {"skill":"${picks[0]}","question":"...?","options":["A","B","C","D"],"answer":0,"explanation":"..."},
+  {"skill":"${picks[1]}","question":"...?","options":["A","B","C","D"],"answer":1,"explanation":"..."},
+  {"skill":"${picks[2]}","question":"...?","options":["A","B","C","D"],"answer":2,"explanation":"..."}
+]`;
+
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:900,messages:[{role:'user',content:prompt}]})
+  });
+  const data = await res.json();
+  const text = data.content?.[0]?.text || '';
+  const match = text.match(/\[[\s\S]*\]/);
+  if (!match) throw new Error('No JSON');
+  const qs = JSON.parse(match[0]);
+  if (!Array.isArray(qs) || qs.length < 3) throw new Error('Bad array');
+  qqList = qs.slice(0,3);
+}
+
+function staticQuestions(skills) {
+  const bank = {
+    'Python':[
+      {skill:'Python',question:'What does `len({})` return in Python?',options:['1','0','None','Error'],answer:1,explanation:'An empty dict has 0 key-value pairs, so len returns 0.'},
+      {skill:'Python',question:'Which is used to handle exceptions in Python?',options:['catch','error','except','handle'],answer:2,explanation:'Python uses try/except. Java/JS use try/catch.'}],
+    'Java':[
+      {skill:'Java',question:'Which is NOT a primitive type in Java?',options:['int','boolean','String','char'],answer:2,explanation:'String is a class in Java, not a primitive type.'},
+      {skill:'Java',question:'Output of: System.out.println(10/3) in Java?',options:['3.33','3','4','3.0'],answer:1,explanation:'Integer division truncates decimals in Java. 10/3 = 3.'}],
+    'JavaScript':[
+      {skill:'JavaScript',question:'Which keyword declares a block-scoped variable in JS?',options:['var','let','const','all of above'],answer:1,explanation:'`let` is block-scoped. `var` is function-scoped. `const` is block-scoped but cannot be reassigned.'},
+      {skill:'JavaScript',question:'What does `===` check in JavaScript?',options:['Value only','Type only','Value and type','Reference'],answer:2,explanation:'=== is strict equality — checks both value and type, unlike == which does type coercion.'}],
+    'React':[
+      {skill:'React',question:'Which hook performs side effects in React?',options:['useState','useRef','useEffect','useContext'],answer:2,explanation:'useEffect is for side effects like API calls and subscriptions.'},
+      {skill:'React',question:'What does the `key` prop do in lists?',options:['Styling','Identifies changed items','Prevents re-renders','Passes data'],answer:1,explanation:'Keys help React identify which items changed for efficient DOM updates.'}],
+    'Data Structures':[
+      {skill:'Data Structures',question:'Average time complexity of Hash Table search?',options:['O(n)','O(log n)','O(1)','O(n²)'],answer:2,explanation:'Hash tables compute index directly from key, giving O(1) average search.'},
+      {skill:'Data Structures',question:'Which uses LIFO principle?',options:['Queue','Stack','Linked List','Tree'],answer:1,explanation:'Stack is LIFO — last in, first out.'}],
+    'Algorithms':[
+      {skill:'Algorithms',question:'Time complexity of Binary Search?',options:['O(n)','O(n²)','O(log n)','O(1)'],answer:2,explanation:'Binary Search halves the search space each step → O(log n).'},
+      {skill:'Algorithms',question:'Which sort has best average-case complexity?',options:['Bubble','Selection','Quick Sort','Insertion'],answer:2,explanation:'Quick Sort averages O(n log n) with good cache performance.'}],
+    'SQL':[
+      {skill:'SQL',question:'Which filters AFTER grouping?',options:['WHERE','HAVING','FILTER','GROUP FILTER'],answer:1,explanation:'HAVING filters after GROUP BY; WHERE filters before.'},
+      {skill:'SQL',question:'What does LEFT JOIN return?',options:['Only matches','All left + matching right','All right + matching left','All rows both'],answer:1,explanation:'LEFT JOIN returns all left rows + matching right rows (NULL if no match).'}],
+    'Python':[
+      {skill:'Python',question:'What is a list comprehension used for in Python?',options:['Class creation','Creating lists concisely','Importing modules','Handling errors'],answer:1,explanation:'List comprehensions create lists in a concise, readable one-line syntax.'}],
+    'default':[
+      {skill:'CS',question:'What does "API" stand for?',options:['App Program Interface','Automated Processing Index','Advanced Protocol Integration','Application Programming Interface'],answer:3,explanation:'API = Application Programming Interface — rules for software interaction.'},
+      {skill:'CS',question:'HTTP status code for "Not Found"?',options:['200','301','404','500'],answer:2,explanation:'404 Not Found is returned when a resource cannot be found on the server.'},
+      {skill:'CS',question:'What is a "bug" in software?',options:['A feature request','An error or flaw in code','A type of database','A security certificate'],answer:1,explanation:'A bug is an error or flaw in code that causes unexpected behaviour.'}]
+  };
+
+  const result = [];
+  const used = new Set();
+  const pickedSkills = [...skills].sort(() => Math.random()-.5).slice(0,3);
+  while(pickedSkills.length < 3) pickedSkills.push(pickedSkills[0]||'default');
+
+  for (const skill of pickedSkills) {
+    const pool = (bank[skill]||bank['default']).filter(q => !used.has(q.question));
+    const defPool = bank['default'].filter(q => !used.has(q.question));
+    const finalPool = pool.length > 0 ? pool : defPool;
+    if (finalPool.length > 0) {
+      const q = finalPool[Math.floor(Math.random()*finalPool.length)];
+      result.push({...q, skill});
+      used.add(q.question);
+    }
+  }
+  return result.slice(0,3);
+}
+
+function resetQDots() {
+  document.querySelectorAll('.qdot').forEach((d,i) => { d.className = 'qdot' + (i===0?' active':''); });
+}
+
+function showQuestion(idx) {
+  const q = qqList[idx];
+  if (!q) return;
+  qAnswered = false;
+
+  // Dots
+  document.querySelectorAll('.qdot').forEach((d,i) => {
+    d.className = 'qdot' + (i < idx ? ' correct' : i === idx ? ' active' : '');
+  });
+
+  document.getElementById('q-stag').textContent = q.skill;
+  document.getElementById('q-num').textContent = `Question ${idx+1} of 3`;
+  document.getElementById('q-text').textContent = q.question;
+
+  const opts = document.getElementById('q-opts');
+  opts.innerHTML = '';
+  ['A','B','C','D'].forEach((l,i) => {
+    const btn = document.createElement('button');
+    btn.className = 'q-opt';
+    btn.innerHTML = `<span class="q-letter">${l}</span>${q.options[i]}`;
+    btn.onclick = () => pickOption(i, btn);
+    opts.appendChild(btn);
+  });
+
+  const fb = document.getElementById('q-feedback');
+  fb.className = 'q-feedback';
+  document.getElementById('btn-nq').disabled = true;
+  document.getElementById('btn-nq').textContent = idx < 2 ? 'Next Question →' : 'See Results 🎉';
+}
+
+function pickOption(chosen, btn) {
+  if (qAnswered) return;
+  qAnswered = true;
+  const q = qqList[qqIdx];
+  document.querySelectorAll('.q-opt').forEach(o => o.classList.add('locked'));
+  const correct = chosen === q.answer;
+
+  document.querySelectorAll('.q-opt').forEach((o,i) => {
+    if (i === q.answer) o.classList.add('correct');
+    else if (i === chosen && !correct) o.classList.add('wrong');
+  });
+
+  // Update current dot
+  const dots = document.querySelectorAll('.qdot');
+  if (dots[qqIdx]) dots[qqIdx].className = 'qdot ' + (correct ? 'correct' : 'wrong');
+
+  const fb = document.getElementById('q-feedback');
+  if (correct) {
+    qCorrect++;
+    qSessionXP += 10;
+    fb.className = 'q-feedback show ok';
+    document.getElementById('q-ficon').textContent = '✅';
+    document.getElementById('q-ftxt').textContent = 'Correct! +10 XP';
+    document.getElementById('q-fexp').textContent = q.explanation;
+    addXP(10, `Answered "${q.skill}" question correctly`, 'quiz');
+    // Update dashboard bars
+    updateQdcBar(qqIdx, 'green');
+  } else {
+    fb.className = 'q-feedback show no';
+    document.getElementById('q-ficon').textContent = '❌';
+    document.getElementById('q-ftxt').textContent = 'Incorrect!';
+    document.getElementById('q-fexp').textContent = `Correct: ${q.options[q.answer]}. ${q.explanation}`;
+    updateQdcBar(qqIdx, 'red');
+  }
+
+  document.getElementById('q-session-xp').textContent = qSessionXP;
+  document.getElementById('btn-nq').disabled = false;
+
+  // Save progress
+  const sc = getScore();
+  sc.quizAnswered = sc.quizAnswered || [];
+  sc.quizAnswered.push({idx:qqIdx, correct});
+  sc.quizXpToday = qSessionXP;
+  saveScore(sc);
+}
+
+function nextQ() {
+  if (qqIdx < 2) {
+    qqIdx++;
+    showQuestion(qqIdx);
+  } else {
+    // Done
+    document.getElementById('q-wrap').style.display = 'none';
+    document.getElementById('q-complete').style.display = 'block';
+    document.getElementById('q-comp-xp').textContent = qSessionXP;
+    document.getElementById('q-comp-score').textContent = qCorrect;
+    if (qCorrect === 3) {
+      document.getElementById('q-comp-emoji').textContent = '🏆';
+      document.getElementById('q-comp-title').textContent = 'Perfect Score!';
+      document.getElementById('q-comp-sub').textContent = 'All 3 correct! Outstanding!';
+      confetti();
+    } else if (qCorrect === 0) {
+      document.getElementById('q-comp-emoji').textContent = '💪';
+      document.getElementById('q-comp-title').textContent = 'Keep Practicing!';
+      document.getElementById('q-comp-sub').textContent = 'Review the explanations and try again tomorrow!';
+    } else {
+      document.getElementById('q-comp-emoji').textContent = '🎊';
+      document.getElementById('q-comp-title').textContent = 'Quiz Complete!';
+      document.getElementById('q-comp-sub').textContent = `${qCorrect} out of 3 correct. Good effort!`;
+    }
+    // Update streak
+    const sc = getScore();
+    const yesterday = new Date(); yesterday.setDate(yesterday.getDate()-1);
+    if (sc.lastStreakDate === yesterday.toDateString()) sc.streak = (sc.streak||0) + 1;
+    else if (sc.lastStreakDate !== TODAY) sc.streak = 1;
+    sc.lastStreakDate = TODAY;
+    saveScore(sc);
+  }
+}
+
+function updateQdcBar(idx, cls) {
+  const bars = document.querySelectorAll('.qdc-bar');
+  if (bars[idx]) { bars[idx].classList.remove('green','red'); bars[idx].classList.add(cls); }
+}
+
+function confetti() {
+  const cols = ['#00acc1','#1a237e','#f59e0b','#10b981','#a78bfa','#f472b6'];
+  for (let i = 0; i < 70; i++) {
+    setTimeout(() => {
+      const c = document.createElement('div');
+      c.className = 'cf';
+      c.style.left = Math.random()*100 + 'vw';
+      c.style.background = cols[Math.floor(Math.random()*cols.length)];
+      const s = 8 + Math.random()*8;
+      c.style.width = s + 'px'; c.style.height = s + 'px';
+      c.style.borderRadius = Math.random()>.5 ? '50%' : '2px';
+      c.style.animationDuration = (1.5 + Math.random()*2) + 's';
+      document.body.appendChild(c);
+      setTimeout(() => c.remove(), 4000);
+    }, i*30);
+  }
+}
+
+
+// ==================== DASHBOARD ====================
+function renderDashboard() {
+  if (!CU) return;
+  document.getElementById('d-name').textContent = CU.name;
+  document.getElementById('d-goal').textContent = GOAL_NAMES[CU.goal] || '–';
+  document.getElementById('d-skills').textContent = (CU.skills||[]).length;
+  document.getElementById('d-resume').textContent = CU.hasResume ? (CU.resumeName||'Uploaded') : 'Not Added';
+  const sc = getScore();
+  document.getElementById('d-xp').textContent = sc.total;
+
+  const done = sc.lastQuizDate === TODAY ? (sc.quizAnswered||[]).length : 0;
+  const left = Math.max(0, 3-done);
+  document.getElementById('qdc-left').textContent = left;
+  document.getElementById('qdc-sub').textContent = done >= 3
+    ? `✅ Done for today! 🔥 ${sc.streak||0} day streak`
+    : `🔥 ${left} question${left!==1?'s':''} left · Earn up to ${left*10} more XP`;
+  const bars = document.querySelectorAll('.qdc-bar');
+  (sc.quizAnswered||[]).forEach((a,i)=>{
+    if(bars[i]){bars[i].classList.remove('green','red');bars[i].classList.add(a.correct?'green':'red');}
+  });
+  document.getElementById('qdc').style.opacity = done>=3?'.75':'1';
+}
+
+// ==================== GAP ANALYSIS ====================
+function initGap() {
+  if (!CU) return;
+  document.getElementById('gap-goal').value = CU.goal || 'software_dev';
+  renderGap();
+}
+
+function renderGap() {
+  if (!CU) return;
+  const gk = document.getElementById('gap-goal').value;
+  const gd = GOAL_DATA[gk];
+  const us = CU.skills || [];
+  const allS = Object.values(gd.categories).flat();
+  const have = allS.filter(s => us.includes(s));
+  const miss = allS.filter(s => !us.includes(s));
+  const pct = Math.round(have.length/allS.length*100);
+
+  const catStats = {};
+  Object.entries(gd.categories).forEach(([c,ss]) => {
+    const h = ss.filter(s => us.includes(s)).length;
+    catStats[c] = {have:h, total:ss.length, pct:Math.round(h/ss.length*100)};
+  });
+
+  // Pie
+  if(pieChart) pieChart.destroy();
+  pieChart = new Chart(document.getElementById('gap-pie'), {
+    type:'doughnut',
+    data:{labels:['Have','To Learn'],datasets:[{data:[have.length,miss.length],backgroundColor:['#00acc1','#e2e8f0'],borderWidth:0}]},
+    options:{cutout:'65%',plugins:{legend:{position:'bottom'}}}
+  });
+
+  // Radar
+  if(radarChart) radarChart.destroy();
+  radarChart = new Chart(document.getElementById('gap-radar'), {
+    type:'radar',
+    data:{labels:Object.keys(catStats),datasets:[{label:'Readiness %',data:Object.values(catStats).map(c=>c.pct),backgroundColor:'rgba(0,172,193,.2)',borderColor:'#00acc1',pointBackgroundColor:'#1a237e'}]},
+    options:{scales:{r:{min:0,max:100,ticks:{stepSize:20}}},plugins:{legend:{display:false}}}
+  });
+
+  // Jobs
+  const jg = document.getElementById('gap-jobs');
+  jg.innerHTML = '';
+  gd.jobs.forEach(j => {
+    const eligible = pct >= j.thr;
+    jg.innerHTML += `<div class="job-card ${eligible?'eligible':''}">
+      <div style="font-weight:700;color:var(--navy);font-size:13px">${eligible?'✅':'🔒'} ${j.title}</div>
+      <div style="font-size:11px;color:var(--muted);margin-top:3px">${pct}% match ${eligible?'– You qualify!':'(need '+j.thr+'%+)'}</div>
+      <div style="background:#e2e8f0;border-radius:99px;height:5px;margin-top:7px"><div style="width:${Math.min(pct,100)}%;height:5px;border-radius:99px;background:linear-gradient(90deg,var(--teal),var(--navy))"></div></div>
+      <div style="font-size:10px;color:var(--muted);margin-top:6px">Key: ${j.skills.join(', ')}</div>
+    </div>`;
+  });
+
+  // Bars
+  const gb = document.getElementById('gap-bars');
+  gb.innerHTML = '';
+  Object.entries(catStats).forEach(([c,s]) => {
+    const col = s.pct>=70?'#10b981':s.pct>=40?'#00acc1':'#ef4444';
+    gb.innerHTML += `<div class="skill-bar-wrap">
+      <div class="skill-bar-row"><span>${c}</span><span>${s.have}/${s.total} (${s.pct}%)</span></div>
+      <div class="skill-bar-track"><div class="skill-bar-fill" style="width:${s.pct}%;background:${col}"></div></div>
+    </div>`;
+  });
+
+  // Chips
+  document.getElementById('gap-have').innerHTML = have.length
+    ? have.map(s=>`<span class="chip chip-have">✓ ${s}</span>`).join('')
+    : '<span style="color:var(--muted);font-size:13px">No matching skills yet</span>';
+  const missShow = miss.slice(0,30);
+  document.getElementById('gap-miss').innerHTML = missShow.map(s=>`<span class="chip chip-miss">⚡ ${s}</span>`).join('')
+    + (miss.length>30?`<span style="font-size:12px;color:var(--muted)"> +${miss.length-30} more</span>`:'');
+}
+
+// ==================== RESUME ====================
+function initResume() {
+  const has = CU?.hasResume && CU?.resumeData;
+  document.getElementById('r-noresume').style.display = has?'none':'block';
+  document.getElementById('r-hasresume').style.display = has?'block':'none';
+  if(has){
+    document.getElementById('r-fname').textContent = CU.resumeName||'resume.pdf';
+    document.getElementById('r-goal').value = CU.goal||'software_dev';
+    document.getElementById('r-result').style.display = 'none';
+  }
+}
+
+function doResumeAI() {
+  const btn = document.querySelector('#r-hasresume .btn-main');
+  btn.textContent = '⏳ Analysing...'; btn.disabled = true;
+  const gk = document.getElementById('r-goal').value;
+  const gd = GOAL_DATA[gk];
+  const us = CU.skills||[];
+  const allS = Object.values(gd.categories).flat();
+  const have = allS.filter(s=>us.includes(s));
+  const miss = allS.filter(s=>!us.includes(s)).slice(0,12);
+  const pct = Math.round(have.length/allS.length*100);
+  const score = Math.min(95, pct + Math.floor(Math.random()*8));
+
+  const tips = {
+    software_dev:['Quantify impact (e.g. "Reduced load time by 30%") rather than generic descriptions.','Add a clear Skills section at the top with your strongest languages and frameworks.','Ensure ATS keywords like REST APIs, system design, and cloud platforms appear naturally.','Include GitHub/portfolio links to let employers see your actual code.'],
+    ml_engineer:['Include model evaluation metrics (accuracy, F1, AUROC) in project descriptions.','Mention any cloud ML experience: AWS SageMaker, GCP AI, Azure ML.','Link to Kaggle profiles or published research to establish credibility.','Use action verbs: "trained", "deployed", "optimised" rather than "worked on".'],
+    data_analyst:['SQL and Python skills must be prominent and early in the resume.','Add dashboards, reports, or analytical case studies with measurable outcomes.','Include certifications from Google, Microsoft, or Coursera for quick trust signals.','Highlight stakeholder communication and data storytelling — not just technical skills.']
+  };
+
+  setTimeout(() => {
+    document.getElementById('r-score').textContent = score + '%';
+    document.getElementById('r-score-label').textContent = 'Match for ' + gd.name;
+    document.getElementById('r-tips').innerHTML = tips[gk].map((t,i)=>`<p style="font-size:13px;margin-bottom:10px;line-height:1.6"><strong>${['💡','🎯','⚡','🔑'][i]}</strong> ${t}</p>`).join('');
+    document.getElementById('r-result').style.display = 'block';
+    btn.textContent = '🔄 Re-Analyse'; btn.disabled = false;
+  }, 1800);
+}
+
+// ==================== PROFILE ====================
+let prevSkillCount = 0;
+
+function initProfile() {
+  if (!CU) return;
+  prevSkillCount = (CU.skills||[]).length;
+  document.getElementById('p-hname').textContent = CU.name;
+  document.getElementById('p-avatar').textContent = CU.name[0].toUpperCase();
+  const types = {school:'School Student',college:'College Student',graduate:'Graduate/Professional'};
+  document.getElementById('p-htype').textContent = (types[CU.studentType]||'–') + ' · ' + (GOAL_NAMES[CU.goal]||'–');
+  document.getElementById('p-name').value = CU.name||'';
+  document.getElementById('p-user').value = CU.username||'';
+  document.getElementById('p-email').value = CU.email||'';
+  document.getElementById('p-phone').value = CU.phone||'';
+  document.getElementById('p-goal').value = CU.goal||'software_dev';
+
+  // Academic
+  const ac = document.getElementById('p-acad');
+  if(CU.studentType==='school'){
+    ac.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div style="background:#f8f8f8;border-radius:10px;padding:12px"><div style="font-size:11px;color:var(--muted);font-weight:600">Class</div><div style="font-weight:700;color:var(--navy);margin-top:2px">${CU.schoolClass?'Class '+CU.schoolClass:'–'}</div></div>
+      <div style="background:#f8f8f8;border-radius:10px;padding:12px"><div style="font-size:11px;color:var(--muted);font-weight:600">10th Marks</div><div style="font-weight:700;color:var(--navy);margin-top:2px">${CU.schoolMarks10?CU.schoolMarks10+'%':'–'}</div></div>
+      <div style="background:#f8f8f8;border-radius:10px;padding:12px;grid-column:span 2"><div style="font-size:11px;color:var(--muted);font-weight:600">School</div><div style="font-weight:700;color:var(--navy);margin-top:2px">${CU.schoolName||'–'}</div></div>
+    </div>`;
+  } else if(CU.studentType==='college'){
+    ac.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div style="background:#f8f8f8;border-radius:10px;padding:12px"><div style="font-size:11px;color:var(--muted);font-weight:600">Degree</div><div style="font-weight:700;color:var(--navy);margin-top:2px">${CU.degree?.toUpperCase()||'–'}</div></div>
+      <div style="background:#f8f8f8;border-radius:10px;padding:12px"><div style="font-size:11px;color:var(--muted);font-weight:600">Year</div><div style="font-weight:700;color:var(--navy);margin-top:2px">${CU.yearOfStudy?CU.yearOfStudy+' Year':'–'}</div></div>
+      <div style="background:#f8f8f8;border-radius:10px;padding:12px"><div style="font-size:11px;color:var(--muted);font-weight:600">10th</div><div style="font-weight:700;color:var(--navy);margin-top:2px">${CU.marks10?CU.marks10+'%':'–'}</div></div>
+      <div style="background:#f8f8f8;border-radius:10px;padding:12px"><div style="font-size:11px;color:var(--muted);font-weight:600">12th</div><div style="font-weight:700;color:var(--navy);margin-top:2px">${CU.marks12?CU.marks12+'%':'–'}</div></div>
+      <div style="background:#f8f8f8;border-radius:10px;padding:12px;grid-column:span 2"><div style="font-size:11px;color:var(--muted);font-weight:600">College</div><div style="font-weight:700;color:var(--navy);margin-top:2px">${CU.collegeName||'–'}</div></div>
+    </div>`;
+  } else {
+    ac.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div style="background:#f8f8f8;border-radius:10px;padding:12px"><div style="font-size:11px;color:var(--muted);font-weight:600">Qualification</div><div style="font-weight:700;color:var(--navy);margin-top:2px">${CU.qualification?.toUpperCase()||'–'}</div></div>
+      <div style="background:#f8f8f8;border-radius:10px;padding:12px"><div style="font-size:11px;color:var(--muted);font-weight:600">Experience</div><div style="font-weight:700;color:var(--navy);margin-top:2px">${CU.expYears?CU.expYears+' years':'–'}</div></div>
+      <div style="background:#f8f8f8;border-radius:10px;padding:12px;grid-column:span 2"><div style="font-size:11px;color:var(--muted);font-weight:600">Last Role</div><div style="font-weight:700;color:var(--navy);margin-top:2px">${CU.lastJobRole||'–'}</div></div>
+    </div>`;
+  }
+
+  // Skills
+  pSkills = [...(CU.skills||[])];
+  document.getElementById('p-skill-count').textContent = pSkills.length;
+  buildSkillGrid('p-skills', pSkills);
+
+  // Resume
+  const ri = document.getElementById('p-resume-info');
+  if(CU.hasResume){
+    ri.style.display='block';
+    document.getElementById('p-resume-name').textContent = CU.resumeName||'resume.pdf';
+    document.getElementById('p-rzone').querySelector('#p-rtext').textContent = '🔄 Click to replace resume';
+  } else {
+    ri.style.display='none';
+    document.getElementById('p-rtext').textContent = '📄 Click to upload PDF resume';
+  }
+}
+
+function onProfileResume(inp) {
+  if(!inp.files[0]) return;
+  const f = inp.files[0];
+  const reader = new FileReader();
+  reader.onload = e => {
+    CU.hasResume = true; CU.resumeName = f.name; CU.resumeData = e.target.result;
+    document.getElementById('p-rtext').textContent = '✅ '+f.name+' (click to replace)';
+    document.getElementById('p-rzone').classList.add('has');
+    document.getElementById('p-resume-info').style.display='block';
+    document.getElementById('p-resume-name').textContent = f.name;
+    toast('Resume uploaded! 📄','ok');
+  };
+  reader.readAsDataURL(f);
+}
+
+function removeResume() {
+  CU.hasResume=false; CU.resumeName=null; CU.resumeData=null;
+  document.getElementById('p-resume-info').style.display='none';
+  document.getElementById('p-rtext').textContent='📄 Click to upload PDF resume';
+  document.getElementById('p-rzone').classList.remove('has');
+  toast('Resume removed');
+}
+
+function saveProfile() {
+  const oldCount = (CU.skills||[]).length;
+  CU.name = document.getElementById('p-name').value.trim() || CU.name;
+  CU.username = document.getElementById('p-user').value.trim();
+  CU.phone = document.getElementById('p-phone').value.trim();
+  CU.goal = document.getElementById('p-goal').value;
+  CU.skills = [...pSkills];
+  const newCount = CU.skills.length;
+
+  const users = JSON.parse(localStorage.getItem('yogya_users')||'[]');
+  const i = users.findIndex(u=>u.email===CU.email);
+  if(i>-1) users[i]=CU;
+  localStorage.setItem('yogya_users', JSON.stringify(users));
+  localStorage.setItem('yogya_user', JSON.stringify(CU));
+  toast('Profile saved! ✅','ok');
+  document.getElementById('p-hname').textContent = CU.name;
+  document.getElementById('p-avatar').textContent = CU.name[0].toUpperCase();
+
+  // Award XP for new skills
+  if(newCount > oldCount) {
+    const gained = newCount - oldCount;
+    addXP(gained*100, `Added ${gained} new skill${gained>1?'s':''}`, 'skill');
+    toast(`🎉 +${gained*100} XP for adding ${gained} new skill${gained>1?'s':''}!`, 'ok');
+  }
+}
+
+function doLogout() {
+  CU=null;
+  localStorage.removeItem('yogya_user');
+  nav('login');
+  toast('Logged out','');
+}
+
+// ==================== LOGIN ====================
+function doLogin() {
+  const email = document.getElementById('li-email').value.trim();
+  const pass = document.getElementById('li-pass').value;
+  document.getElementById('li-email-err').textContent = '';
+  document.getElementById('li-pass-err').textContent = '';
+  if (!email) { document.getElementById('li-email-err').textContent = 'Email required'; return; }
+  if (!pass) { document.getElementById('li-pass-err').textContent = 'Password required'; return; }
+  const users = JSON.parse(localStorage.getItem('yogya_users')||'[]');
+  const u = users.find(x => x.email===email && x.password===pass);
+  if (!u) { document.getElementById('li-pass-err').textContent = 'Invalid email or password'; return; }
+  CU = u;
+  localStorage.setItem('yogya_user', JSON.stringify(u));
+  toast('Welcome back, ' + u.name.split(' ')[0] + '! 👋', 'ok');
+  nav('dashboard');
+}
+
+// ==================== SIGNUP WIZARD ====================
+let wizStep = 1;
+
+function stepGo(n) {
+  if (n > wizStep && !validateWizStep(wizStep)) return;
+  const old = wizStep; wizStep = n;
+  document.getElementById('ws'+old).classList.remove('active');
+  document.getElementById('ws'+n).classList.add('active');
+  for(let i=0;i<3;i++){
+    const sw = document.getElementById('sw'+i);
+    sw.className = 'step-wrap' + (i+1<n?' done':i+1===n?' curr':'');
+  }
+}
+
+function validateWizStep(n) {
+  if (n===1) {
+    const name=document.getElementById('s1n').value.trim();
+    const user=document.getElementById('s1u').value.trim();
+    const email=document.getElementById('s1e').value.trim();
+    const pass=document.getElementById('s1p').value;
+    const cpass=document.getElementById('s1cp').value;
+    document.getElementById('s1e-err').textContent='';
+    if(!name||!user||!email||!pass){toast('Fill all required fields','bad');return false;}
+    if(pass.length<8){toast('Password min 8 characters','bad');return false;}
+    if(pass!==cpass){toast('Passwords do not match','bad');return false;}
+    const users=JSON.parse(localStorage.getItem('yogya_users')||'[]');
+    if(users.find(u=>u.email===email)){document.getElementById('s1e-err').textContent='Email already registered';return false;}
+    return true;
+  }
+  if(n===2){if(!document.getElementById('stype').value){toast('Select student type','bad');return false;}return true;}
+  return true;
+}
+
+function onTypeChange() {
+  const t = document.getElementById('stype').value;
+  document.getElementById('f-school').style.display = t==='school'?'block':'none';
+  document.getElementById('f-college').style.display = t==='college'?'block':'none';
+  document.getElementById('f-grad').style.display = t==='graduate'?'block':'none';
+}
+
+function onClassChange() {
+  const cls = parseInt(document.getElementById('sc-class').value)||0;
+  document.getElementById('sc-marks-fld').style.display = cls>=11?'block':'none';
+}
+
+let suSkills = [];
+let suResume = null;
+
+function buildSkillGrid(id, selectedArr) {
+  const el = document.getElementById(id); if(!el) return;
+  el.innerHTML = '';
+  ALL_SKILLS.forEach(s => {
+    const chip = document.createElement('div');
+    chip.className = 'sk' + (selectedArr.includes(s)?' on':'');
+    chip.textContent = s;
+    chip.onclick = () => {
+      const i = selectedArr.indexOf(s);
+      if(i>-1){selectedArr.splice(i,1);chip.classList.remove('on');}
+      else{selectedArr.push(s);chip.classList.add('on');}
+      const cnt = document.getElementById(id==='p-skills'?'p-skill-count':'su-sc');
+      if(cnt) cnt.textContent = selectedArr.length;
+    };
+    el.appendChild(chip);
+  });
+}
+
+function onSuResume(inp) {
+  if(inp.files[0]){suResume=inp.files[0];document.getElementById('su-rtext').textContent='✅ '+suResume.name;document.getElementById('su-rzone').classList.add('has');}
+}
+
+function doSignup() {
+  const goal = document.getElementById('s3g').value;
+  if(!goal){toast('Select a career goal','bad');return;}
+  const btn = document.getElementById('su-submit'); btn.textContent='Creating...'; btn.disabled=true;
+
+  const type = document.getElementById('stype').value;
+  const d = {
+    name:document.getElementById('s1n').value.trim(),
+    username:document.getElementById('s1u').value.trim(),
+    email:document.getElementById('s1e').value.trim(),
+    password:document.getElementById('s1p').value,
+    phone:document.getElementById('s1ph').value.trim(),
+    studentType:type, goal, skills:[...suSkills],
+    experience:document.getElementById('s3ex').value,
+    hasResume:!!suResume, resumeName:suResume?suResume.name:null,
+  };
+
+  if(type==='school'){
+    d.schoolClass=document.getElementById('sc-class').value;
+    d.schoolMarks10=document.getElementById('sc-m10').value;
+    d.schoolName=document.getElementById('sc-sname').value;
+  } else if(type==='college'){
+    d.marks10=document.getElementById('co-m10').value;
+    d.marks12=document.getElementById('co-m12').value;
+    d.degree=document.getElementById('co-deg').value;
+    d.yearOfStudy=document.getElementById('co-yr').value;
+    d.collegeName=document.getElementById('co-cname').value;
+  } else {
+    d.qualification=document.getElementById('gr-qual').value;
+    d.expYears=document.getElementById('gr-exp').value;
+    d.lastJobRole=document.getElementById('gr-role').value;
+    d.company=document.getElementById('gr-co').value;
+  }
+
+  const finish = () => {
+    const users = JSON.parse(localStorage.getItem('yogya_users')||'[]');
+    users.push(d);
+    localStorage.setItem('yogya_users', JSON.stringify(users));
+    CU = d;
+    localStorage.setItem('yogya_user', JSON.stringify(d));
+    if(d.skills.length > 0) {
+      setTimeout(() => addXP(d.skills.length*100, `Signup bonus: ${d.skills.length} skill${d.skills.length>1?'s':''} added`,'skill'), 700);
+    }
+    btn.textContent='🎉 Create Account'; btn.disabled=false;
+    // Reset wizard
+    wizStep = 1;
+    suSkills = []; suResume = null;
+    nav('success');
+  };
+
+  if(suResume){
+    const reader = new FileReader();
+    reader.onload = e => { d.resumeData = e.target.result; finish(); };
+    reader.readAsDataURL(suResume);
+  } else { finish(); }
+}
+
+
+// ==================== TOAST ====================
+function toast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type?' '+type:'');
+  setTimeout(() => t.className='toast', 3200);
+}
+
+// ==================== MOCK TEST ====================
+
+const MOCK_NUM_QUESTIONS = 20;
+const MOCK_TIMER_SECONDS = 30 * 60; // 30 minutes
+
+const GOAL_DOMAIN_TOPICS = {
+  software_dev: ['Data Structures','Algorithms','OOP','DBMS','Computer Networks','OS Concepts','System Design','Java','Python','JavaScript','HTML5','CSS3','React','Node.js','REST APIs','MySQL','MongoDB','Docker','Git & GitHub','TypeScript'],
+  ml_engineer: ['Linear Algebra','Statistics','Python','NumPy','Pandas','Supervised Learning','Unsupervised Learning','Deep Learning','TensorFlow','PyTorch','NLP','Computer Vision','Feature Engineering','Data Cleaning','Scikit-learn'],
+  data_analyst: ['SQL','Python','Excel','Power BI','Tableau','Statistics','Probability','Pandas','NumPy','Matplotlib','Data Cleaning','Feature Engineering','Supervised Learning']
+};
+
+// State
+let mtLevel = '';
+let mtQuestions = [];
+let mtCurrentIdx = 0;
+let mtUserAnswers = {}; // idx -> chosen option index
+let mtTimerInterval = null;
+let mtSecondsLeft = MOCK_TIMER_SECONDS;
+let mtStartTime = null;
+let mtGoalName = '';
+let mtDomainTopics = [];
+
+function initMockTest() {
+  if (!CU) return;
+  clearInterval(mtTimerInterval);
+
+  // Check skill unlock condition (>= 50%)
+  const gk = CU.goal || 'software_dev';
+  const gd = GOAL_DATA[gk];
+  const userSkills = CU.skills || [];
+  const allGoalSkills = Object.values(gd.categories).flat();
+  const have = allGoalSkills.filter(s => userSkills.includes(s)).length;
+  const pct = Math.round((have / allGoalSkills.length) * 100);
+
+  document.getElementById('mt-lock-fill').style.width = Math.min(pct, 100) + '%';
+  document.getElementById('mt-lock-pct').textContent = pct + '% skills covered (' + have + '/' + allGoalSkills.length + ')';
+
+  ['mt-locked','mt-select','mt-loading','mt-test','mt-results'].forEach(id => {
+    document.getElementById(id).style.display = 'none';
+  });
+
+  if (pct < 50) {
+    document.getElementById('mt-locked').style.display = 'block';
+    return;
+  }
+
+  // Unlocked — show select screen
+  mtGoalName = GOAL_NAMES[gk] || 'Domain';
+  mtDomainTopics = GOAL_DOMAIN_TOPICS[gk] || GOAL_DOMAIN_TOPICS.software_dev;
+  document.getElementById('mt-domain-name').textContent = mtGoalName;
+  mtLevel = '';
+  document.querySelectorAll('.level-card').forEach(c => c.classList.remove('selected'));
+  document.getElementById('mt-start-btn').disabled = true;
+  document.getElementById('mt-select').style.display = 'block';
+}
+
+function selectLevel(level, el) {
+  mtLevel = level;
+  document.querySelectorAll('.level-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('mt-start-btn').disabled = false;
+}
+
+async function startMockTest() {
+  document.getElementById('mt-select').style.display = 'none';
+  document.getElementById('mt-loading').style.display = 'block';
+  mtQuestions = [];
+  mtUserAnswers = {};
+  mtCurrentIdx = 0;
+
+  try {
+    await generateMockQuestions();
+  } catch(e) {
+    console.warn('AI failed, fallback:', e.message);
+    mtQuestions = buildFallbackQuestions();
+  }
+
+  document.getElementById('mt-loading').style.display = 'none';
+
+  if (!mtQuestions || mtQuestions.length === 0) {
+    showToast('Could not load questions. Try again.', 'error');
+    document.getElementById('mt-select').style.display = 'block';
+    return;
+  }
+
+  setupTestUI();
+  document.getElementById('mt-test').style.display = 'block';
+  startTimer();
+  mtStartTime = Date.now();
+}
+
+async function generateMockQuestions() {
+  const levelDesc = {
+    beginner: 'basic conceptual questions suitable for beginners and freshers',
+    intermediate: 'applied knowledge questions requiring problem-solving skills',
+    advanced: 'advanced/tricky questions involving deep concepts, edge cases, and complex scenarios'
+  }[mtLevel];
+
+  const topicSample = [...mtDomainTopics].sort(() => Math.random()-.5).slice(0, 12).join(', ');
+
+  const prompt = `You are a technical interview question generator for ${mtGoalName} domain.
+
+Generate exactly ${MOCK_NUM_QUESTIONS} multiple choice questions. This is a DOMAIN-WIDE test covering all aspects of ${mtGoalName}.
+
+Level: ${mtLevel.toUpperCase()} — ${levelDesc}
+Cover a variety of these topics (spread questions across all of them): ${topicSample}
+
+Rules:
+- Each question has exactly 4 options (index 0,1,2,3)
+- Only ONE correct answer per question (answer = index 0-3)
+- Include brief explanation for the correct answer
+- Questions must test DOMAIN KNOWLEDGE, not just definitions
+- Vary question styles (conceptual, scenario-based, code output, best practice)
+- Add a "topic" field indicating which topic this question covers
+
+Return ONLY a valid JSON array with no markdown or extra text:
+[
+  {"question":"...?","options":["A","B","C","D"],"answer":1,"explanation":"...","difficulty":"${mtLevel}","topic":"Topic Name"},
+  ...
+]`;
+
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 6000,
+      messages: [{ role: 'user', content: prompt }]
+    })
+  });
+  const data = await res.json();
+  if (data.error) throw new Error(data.error.message);
+  const text = data.content?.[0]?.text || '';
+  const match = text.match(/\[[\s\S]*\]/);
+  if (!match) throw new Error('No JSON array in response');
+  const parsed = JSON.parse(match[0]);
+  if (!Array.isArray(parsed) || parsed.length < 5) throw new Error('Too few questions');
+  mtQuestions = parsed.slice(0, MOCK_NUM_QUESTIONS);
+}
+
+function buildFallbackQuestions() {
+  // 20 hardcoded domain-wide questions as fallback
+  const softdevQ = [
+    {question:'What is the time complexity of binary search?',options:['O(n)','O(log n)','O(n²)','O(1)'],answer:1,explanation:'Binary search halves the search space each step → O(log n).',difficulty:'beginner',topic:'Algorithms'},
+    {question:'Which data structure uses LIFO principle?',options:['Queue','Stack','Heap','Tree'],answer:1,explanation:'Stack = Last In First Out.',difficulty:'beginner',topic:'Data Structures'},
+    {question:'What does OOP stand for?',options:['Open Object Programming','Object Oriented Programming','Ordered Output Protocol','Optional Object Process'],answer:1,explanation:'OOP = Object Oriented Programming — paradigm using objects & classes.',difficulty:'beginner',topic:'OOP'},
+    {question:'In SQL, which keyword filters results AFTER grouping?',options:['WHERE','GROUP BY','HAVING','FILTER'],answer:2,explanation:'HAVING filters after GROUP BY. WHERE filters individual rows.',difficulty:'beginner',topic:'DBMS'},
+    {question:'What does HTTP 404 mean?',options:['Server Error','Resource Not Found','Unauthorized','Redirect'],answer:1,explanation:'404 = Not Found — the requested resource does not exist on the server.',difficulty:'beginner',topic:'Computer Networks'},
+    {question:'Which is NOT a principle of OOP?',options:['Encapsulation','Inheritance','Compilation','Polymorphism'],answer:2,explanation:'Compilation is not an OOP principle. The 4 pillars are Encapsulation, Inheritance, Polymorphism, Abstraction.',difficulty:'beginner',topic:'OOP'},
+    {question:'What is a primary key in a database?',options:['A foreign table reference','Unique identifier for each row','An index column','Encrypted password field'],answer:1,explanation:'Primary key uniquely identifies each row in a table — must be unique and non-null.',difficulty:'beginner',topic:'DBMS'},
+    {question:'What does `git commit` do?',options:['Uploads code to remote','Saves staged changes to local repo history','Merges branches','Clones repository'],answer:1,explanation:'git commit saves a snapshot of staged changes to your local repository history.',difficulty:'beginner',topic:'Git & GitHub'},
+    {question:'What is the worst-case time complexity of Quick Sort?',options:['O(n log n)','O(n)','O(n²)','O(log n)'],answer:2,explanation:'Quick Sort worst case (already sorted, bad pivot) is O(n²). Average is O(n log n).',difficulty:'intermediate',topic:'Algorithms'},
+    {question:'What is closure in JavaScript?',options:['A loop construct','A function with access to its outer scope variables','An error handler','A class method'],answer:1,explanation:'A closure is a function that retains access to its lexical scope even after the outer function returns.',difficulty:'intermediate',topic:'JavaScript'},
+    {question:'What does REST stand for?',options:['Remote Execution Standard Transfer','Representational State Transfer','Resource Entity State Transition','Rapid Endpoint Service Template'],answer:1,explanation:'REST = Representational State Transfer — an architectural style for APIs using HTTP methods.',difficulty:'intermediate',topic:'REST APIs'},
+    {question:'Which HTTP method is idempotent and used to update a resource?',options:['POST','DELETE','PUT','PATCH'],answer:2,explanation:'PUT replaces the entire resource and is idempotent — calling it multiple times has the same result.',difficulty:'intermediate',topic:'REST APIs'},
+    {question:'What is a deadlock in OS?',options:['CPU overload','Two processes waiting for each other forever','Memory overflow','Disk failure'],answer:1,explanation:'Deadlock occurs when two or more processes are each waiting for a resource held by the other.',difficulty:'intermediate',topic:'OS Concepts'},
+    {question:'What is normalization in databases?',options:['Encrypting data','Organizing data to reduce redundancy','Compressing tables','Indexing rows'],answer:1,explanation:'Normalization organizes a database to reduce redundancy and improve data integrity.',difficulty:'intermediate',topic:'DBMS'},
+    {question:'In React, what triggers a component re-render?',options:['CSS changes','State or props change','Import changes','Function declarations'],answer:1,explanation:'React re-renders a component when its state or the props passed to it change.',difficulty:'intermediate',topic:'React'},
+    {question:'What is the purpose of Docker?',options:['Database management','Package and run apps in isolated containers','Cloud storage','CI/CD pipeline only'],answer:1,explanation:'Docker packages apps and dependencies into containers for consistent environments across machines.',difficulty:'intermediate',topic:'Docker'},
+    {question:'What is the difference between `==` and `===` in JavaScript?',options:['No difference','=== checks value only','== checks type, === checks value','=== checks value AND type, == does type coercion'],answer:3,explanation:'=== is strict equality (value + type). == does type coercion before comparison.',difficulty:'intermediate',topic:'JavaScript'},
+    {question:'What is System Design primarily concerned with?',options:['Writing algorithm code','Architecting scalable, reliable, distributed systems','Database query optimization','UI/UX design'],answer:1,explanation:'System Design is about architecting large-scale systems considering scalability, availability, and performance.',difficulty:'advanced',topic:'System Design'},
+    {question:'Which indexing structure is most commonly used in relational databases?',options:['Hash Table','B-Tree','Linked List','Binary Search Tree'],answer:1,explanation:'B-Trees are used in most databases because they maintain sorted data and allow O(log n) search, insert, delete.',difficulty:'advanced',topic:'DBMS'},
+    {question:'In Node.js, what makes it non-blocking?',options:['Multi-threading','Event loop + async I/O','Faster CPU','In-memory database'],answer:1,explanation:'Node.js uses a single-threaded event loop with async I/O — it does not block while waiting for I/O operations.',difficulty:'advanced',topic:'Node.js'},
+  ];
+
+  const mlQ = [
+    {question:'What does "gradient descent" minimize?',options:['Accuracy','Loss function','Model size','Training time'],answer:1,explanation:'Gradient descent iteratively updates parameters to minimize the loss function.',difficulty:'beginner',topic:'ML Concepts'},
+    {question:'What is overfitting?',options:['Model performs well on both train and test','Model performs well on train but poorly on test','Model underfits test data','Slow training'],answer:1,explanation:'Overfitting = model memorizes training data but fails to generalize to new data.',difficulty:'beginner',topic:'ML Concepts'},
+    {question:'What does pandas `df.dropna()` do?',options:['Drop duplicate rows','Remove rows with missing values','Drop a column','Delete the dataframe'],answer:1,explanation:'dropna() removes rows (or columns) containing NaN/null values.',difficulty:'beginner',topic:'Pandas'},
+    {question:'Which library provides `train_test_split`?',options:['NumPy','TensorFlow','Scikit-learn','Pandas'],answer:2,explanation:'scikit-learn provides train_test_split from sklearn.model_selection.',difficulty:'beginner',topic:'Scikit-learn'},
+    {question:'What is the output of `np.zeros((3,3))`?',options:['3x3 matrix of ones','3x3 matrix of zeros','3-element zero vector','Error'],answer:1,explanation:'np.zeros((3,3)) creates a 3×3 matrix filled with 0.0.',difficulty:'beginner',topic:'NumPy'},
+    {question:'Which activation function outputs values between 0 and 1?',options:['ReLU','Tanh','Sigmoid','Softmax'],answer:2,explanation:'Sigmoid outputs values in (0,1), making it useful for binary classification output layers.',difficulty:'intermediate',topic:'Deep Learning'},
+    {question:'What is regularization used for?',options:['Speed up training','Reduce overfitting by penalizing complexity','Increase model capacity','Data augmentation'],answer:1,explanation:'Regularization (L1/L2) adds a penalty for large weights to prevent overfitting.',difficulty:'intermediate',topic:'ML Concepts'},
+    {question:'What is the purpose of a confusion matrix?',options:['Visualize feature importance','Evaluate classification model performance','Plot loss curves','Show data distribution'],answer:1,explanation:'Confusion matrix shows TP, FP, TN, FN counts for classification models.',difficulty:'intermediate',topic:'ML Concepts'},
+    {question:'What does LSTM stand for?',options:['Linear Support Training Model','Long Short-Term Memory','Large Scale Transfer Model','Layered Sequential Training Method'],answer:1,explanation:'LSTM = Long Short-Term Memory — a type of RNN designed to learn long-range dependencies.',difficulty:'intermediate',topic:'Deep Learning'},
+    {question:'What is the "curse of dimensionality"?',options:['GPU memory limits','Problems arising from high-dimensional data','Slow Python loops','Large dataset storage'],answer:1,explanation:'As dimensions increase, data becomes sparse and distance metrics lose meaning.',difficulty:'intermediate',topic:'ML Concepts'},
+    {question:'What is cross-validation used for?',options:['Data augmentation','Robust model evaluation using multiple train/test splits','Hyperparameter storage','Feature selection'],answer:1,explanation:'Cross-validation evaluates model performance more robustly by testing across multiple data splits.',difficulty:'intermediate',topic:'ML Concepts'},
+    {question:'What is transfer learning?',options:['Moving data between servers','Using a pre-trained model as starting point for new task','Copying weights randomly','Training from scratch faster'],answer:1,explanation:'Transfer learning reuses weights from a model trained on a large dataset for a related task.',difficulty:'intermediate',topic:'Deep Learning'},
+    {question:'What does `df.groupby("col").mean()` do in pandas?',options:['Filter rows','Group rows by column and compute mean per group','Sort by column','Merge dataframes'],answer:1,explanation:'groupby() groups rows by a column; .mean() computes the average for each group.',difficulty:'intermediate',topic:'Pandas'},
+    {question:'What is the vanishing gradient problem?',options:['Gradients explode during backprop','Gradients become extremely small, making early layers hard to train','Model forgets data','Slow GPU computation'],answer:1,explanation:'In deep networks, gradients shrink exponentially during backprop, making early layers learn very slowly.',difficulty:'advanced',topic:'Deep Learning'},
+    {question:'What is the difference between bagging and boosting?',options:['No difference','Bagging trains models in sequence, boosting in parallel','Bagging combines models in parallel (independent), boosting builds models sequentially on errors','Bagging is for regression only'],answer:2,explanation:'Bagging (e.g., Random Forest) trains models independently in parallel. Boosting (e.g., XGBoost) trains sequentially, each correcting previous errors.',difficulty:'advanced',topic:'ML Concepts'},
+    {question:'What is attention mechanism in transformers?',options:['Memory allocation','Mechanism to weigh importance of different input tokens when producing output','Dropout variant','Layer normalization'],answer:1,explanation:'Attention allows the model to focus on relevant parts of the input sequence when generating each output token.',difficulty:'advanced',topic:'Deep Learning'},
+    {question:'What is feature engineering?',options:['Training neural networks','Transforming raw data into informative features for ML models','Engineering the model architecture','Collecting more data'],answer:1,explanation:'Feature engineering is the process of using domain knowledge to create, transform, or select features that improve model performance.',difficulty:'beginner',topic:'Feature Engineering'},
+    {question:'What does PCA do?',options:['Prediction Classification Analysis','Reduces dimensionality by projecting data onto principal components','Clusters data into groups','Encodes categorical variables'],answer:1,explanation:'PCA (Principal Component Analysis) reduces dimensions by finding directions of maximum variance.',difficulty:'intermediate',topic:'ML Concepts'},
+    {question:'What is a ROC curve?',options:['Training loss curve','Plot of True Positive Rate vs False Positive Rate at various thresholds','Accuracy vs epoch','Precision-Recall curve'],answer:1,explanation:'ROC curve plots TPR (sensitivity) vs FPR (1-specificity) at different classification thresholds. AUC measures overall performance.',difficulty:'intermediate',topic:'ML Concepts'},
+    {question:'What is the purpose of batch normalization?',options:['Increase batch size','Normalize layer inputs to stabilize and speed up training','Reduce dataset size','Apply dropout'],answer:1,explanation:'Batch normalization normalizes inputs of each layer, reducing internal covariate shift and allowing higher learning rates.',difficulty:'advanced',topic:'Deep Learning'},
+  ];
+
+  const daQ = [
+    {question:'What does SQL `GROUP BY` do?',options:['Sorts results','Groups rows with same values for aggregate functions','Filters rows','Joins tables'],answer:1,explanation:'GROUP BY groups rows with the same values in specified columns, used with aggregate functions like COUNT, SUM.',difficulty:'beginner',topic:'SQL'},
+    {question:'What does `VLOOKUP` do in Excel?',options:['Sorts data','Searches for a value in first column and returns value from another column','Calculates averages','Creates charts'],answer:1,explanation:'VLOOKUP looks up a value in the leftmost column of a range and returns a value in the same row from another column.',difficulty:'beginner',topic:'Excel'},
+    {question:'Which chart type is best for showing parts of a whole?',options:['Line chart','Bar chart','Pie chart','Scatter plot'],answer:2,explanation:'Pie charts show proportion/percentage breakdown of categories as parts of a whole.',difficulty:'beginner',topic:'Power BI'},
+    {question:'What is the purpose of `df.describe()` in pandas?',options:['Show first 5 rows','Generate summary statistics for numerical columns','Drop null values','Show column types'],answer:1,explanation:'describe() returns count, mean, std, min, max, and quartiles for all numeric columns.',difficulty:'beginner',topic:'Pandas'},
+    {question:'What is the difference between mean and median?',options:['No difference','Mean is middle value, median is average','Mean is average of all values, median is the middle value','Mean excludes outliers'],answer:2,explanation:'Mean = sum/count. Median = middle value when sorted. Median is more robust to outliers.',difficulty:'beginner',topic:'Statistics'},
+    {question:'What does `LEFT JOIN` return in SQL?',options:['Only matching rows','All rows from left + matching rows from right (NULLs if no match)','All rows from right','Random rows'],answer:1,explanation:'LEFT JOIN returns all rows from the left table and matching rows from right. Non-matching right rows appear as NULL.',difficulty:'beginner',topic:'SQL'},
+    {question:'What is a primary key in a database table?',options:['Optional identifier','Unique non-null identifier for each row','Foreign table reference','Encrypted column'],answer:1,explanation:'Primary key uniquely identifies each row — it must be unique and cannot be NULL.',difficulty:'beginner',topic:'SQL'},
+    {question:'What is standard deviation?',options:['Average of all values','Measure of spread/dispersion from the mean','Middle value of a dataset','Maximum minus minimum'],answer:1,explanation:'Standard deviation measures how spread out values are from the mean. Higher SD = more variability.',difficulty:'intermediate',topic:'Statistics'},
+    {question:'Which pandas function merges two DataFrames on a common column?',options:['df.concat()','df.merge()','df.join()','df.append()'],answer:1,explanation:'df.merge() is the primary way to join DataFrames on one or more keys, similar to SQL JOIN.',difficulty:'intermediate',topic:'Pandas'},
+    {question:'What is data normalization?',options:['Removing duplicates','Scaling features to a standard range (e.g., 0-1)','Sorting data','Encoding categorical data'],answer:1,explanation:'Normalization scales numerical features to a standard range to prevent features with large values dominating.',difficulty:'intermediate',topic:'Data Cleaning'},
+    {question:'What is a DAX formula in Power BI?',options:['A type of chart','Data Analysis Expressions — formula language for calculations','A database connector','A visualization plugin'],answer:1,explanation:'DAX (Data Analysis Expressions) is the formula language used in Power BI for custom calculations and measures.',difficulty:'intermediate',topic:'Power BI'},
+    {question:'What does `matplotlib.pyplot.show()` do?',options:['Saves the plot','Displays the current plot','Clears the figure','Adds title'],answer:1,explanation:'plt.show() renders and displays the current matplotlib figure in the output.',difficulty:'beginner',topic:'Matplotlib'},
+    {question:'What is the purpose of a pivot table?',options:['Stores raw data','Summarises and aggregates data from a larger table','Creates charts','Formats cells'],answer:1,explanation:'Pivot tables reorganise and summarise data from a larger dataset, allowing quick aggregation and analysis.',difficulty:'intermediate',topic:'Excel'},
+    {question:'What is a histogram used for?',options:['Showing relationships between variables','Displaying distribution of a numerical variable','Comparing categories','Tracking trends over time'],answer:1,explanation:'Histograms show the frequency distribution of a single numerical variable by grouping into bins.',difficulty:'beginner',topic:'Matplotlib'},
+    {question:'What is a z-score?',options:['Data point value','Number of standard deviations a value is from the mean','Percentage rank','Median rank'],answer:1,explanation:'Z-score = (value - mean) / std_dev. It shows how many standard deviations a point is from the mean.',difficulty:'intermediate',topic:'Statistics'},
+    {question:'What does `df.isnull().sum()` return in pandas?',options:['Total rows','Count of null values per column','True/False for each row','Column names'],answer:1,explanation:'isnull() returns True for missing values; .sum() counts them per column.',difficulty:'intermediate',topic:'Pandas'},
+    {question:'What is a correlation coefficient?',options:['Measure of data spread','Statistical measure of the strength and direction of relationship between two variables','Average of two variables','Count of matching values'],answer:1,explanation:'Correlation coefficient ranges from -1 to +1. +1 = perfect positive, -1 = perfect negative, 0 = no linear relationship.',difficulty:'intermediate',topic:'Statistics'},
+    {question:'What is the difference between OLAP and OLTP?',options:['No difference','OLAP is for analytics/reporting, OLTP is for transactional operations','OLAP is faster','OLTP is for big data'],answer:1,explanation:'OLTP handles day-to-day transactions (INSERT/UPDATE). OLAP is optimised for complex analytical queries on historical data.',difficulty:'advanced',topic:'SQL'},
+    {question:'What is feature scaling and why is it important?',options:['Naming features','Transforming features to similar scales so ML algorithms perform better','Selecting features','Encoding categories'],answer:1,explanation:'Feature scaling (normalisation/standardisation) ensures features with different scales do not disproportionately influence ML models.',difficulty:'intermediate',topic:'Feature Engineering'},
+    {question:'What is a Gantt chart used for?',options:['Statistical analysis','Project timeline and task scheduling visualisation','Showing data distribution','Comparing proportions'],answer:1,explanation:'Gantt charts show project schedules with tasks on the y-axis and time on the x-axis, showing duration and dependencies.',difficulty:'beginner',topic:'Tableau'},
+  ];
+
+  const gk = CU?.goal || 'software_dev';
+  const bank = gk === 'ml_engineer' ? mlQ : gk === 'data_analyst' ? daQ : softdevQ;
+  
+  // Filter by level
+  const levelMap = { beginner: ['beginner'], intermediate: ['beginner','intermediate'], advanced: ['beginner','intermediate','advanced'] };
+  const allowed = levelMap[mtLevel] || ['beginner','intermediate'];
+  const filtered = bank.filter(q => allowed.includes(q.difficulty));
+  return [...filtered].sort(() => Math.random()-.5).slice(0, MOCK_NUM_QUESTIONS);
+}
+
+function setupTestUI() {
+  document.getElementById('mt-test-title').textContent = `${mtGoalName} Mock Test`;
+  document.getElementById('mt-test-sub').textContent = `${mtQuestions.length} Questions · ${mtLevel.charAt(0).toUpperCase()+mtLevel.slice(1)} Level`;
+  document.getElementById('mt-total-count').textContent = mtQuestions.length;
+  document.getElementById('mt-tot-num').textContent = mtQuestions.length;
+  buildDots();
+  renderMockQ(0);
+}
+
+function buildDots() {
+  const cont = document.getElementById('mt-dots');
+  cont.innerHTML = '';
+  mtQuestions.forEach((_, i) => {
+    const d = document.createElement('button');
+    d.className = 'mock-qdot' + (i === 0 ? ' active' : '');
+    d.textContent = i + 1;
+    d.style.cssText = 'margin-right:4px;flex-shrink:0;';
+    d.onclick = () => { mtCurrentIdx = i; renderMockQ(i); };
+    cont.appendChild(d);
+  });
+}
+
+function updateDots() {
+  document.querySelectorAll('.mock-qdot').forEach((d, i) => {
+    d.className = 'mock-qdot';
+    if (i === mtCurrentIdx) d.classList.add('active');
+    else if (mtUserAnswers[i] !== undefined) d.classList.add('answered');
+  });
+
+  const answered = Object.keys(mtUserAnswers).length;
+  document.getElementById('mt-answered-count').textContent = answered;
+  const pct = Math.round((answered / mtQuestions.length) * 100);
+  document.getElementById('mt-progress').style.width = pct + '%';
+  document.getElementById('mt-cur-num').textContent = mtCurrentIdx + 1;
+}
+
+function renderMockQ(idx) {
+  const q = mtQuestions[idx];
+  if (!q) return;
+
+  const diffTag = document.getElementById('mt-diff-tag');
+  diffTag.textContent = q.difficulty || mtLevel;
+  diffTag.className = 'mock-diff-tag diff-' + (q.difficulty || 'medium');
+
+  document.getElementById('mt-q-topic-tag').textContent = q.topic ? `📌 ${q.topic}` : '';
+  document.getElementById('mt-q-num').textContent = `Question ${idx + 1} of ${mtQuestions.length}`;
+  document.getElementById('mt-q-text').textContent = q.question;
+
+  const opts = document.getElementById('mt-opts');
+  opts.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'mock-opt' + (mtUserAnswers[idx] === i ? ' picked' : '');
+    btn.innerHTML = `<span class="mock-opt-letter">${letters[i]}</span>${opt}`;
+    btn.onclick = () => selectMockAns(idx, i);
+    opts.appendChild(btn);
+  });
+
+  // Prev/Next state
+  document.getElementById('mt-prev-btn').disabled = idx === 0;
+  document.getElementById('mt-next-btn').disabled = idx === mtQuestions.length - 1;
+  updateDots();
+}
+
+function selectMockAns(qIdx, chosenIdx) {
+  mtUserAnswers[qIdx] = chosenIdx;
+  // Update option styles
+  document.querySelectorAll('.mock-opt').forEach((o, i) => {
+    o.className = 'mock-opt' + (i === chosenIdx ? ' picked' : '');
+  });
+  updateDots();
+}
+
+function mockNavQ(dir) {
+  const newIdx = mtCurrentIdx + dir;
+  if (newIdx < 0 || newIdx >= mtQuestions.length) return;
+  mtCurrentIdx = newIdx;
+  renderMockQ(mtCurrentIdx);
+}
+
+function startTimer() {
+  mtSecondsLeft = MOCK_TIMER_SECONDS;
+  updateTimerDisplay();
+  clearInterval(mtTimerInterval);
+  mtTimerInterval = setInterval(() => {
+    mtSecondsLeft--;
+    updateTimerDisplay();
+    if (mtSecondsLeft <= 0) {
+      clearInterval(mtTimerInterval);
+      showToast('⏰ Time is up! Submitting your test...', 'error');
+      submitMockTest();
+    }
+    // Red warning when < 5 min
+    if (mtSecondsLeft <= 300) {
+      document.getElementById('mt-timer').style.background = 'linear-gradient(135deg,#dc2626,#ef4444)';
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const m = Math.floor(mtSecondsLeft / 60).toString().padStart(2,'0');
+  const s = (mtSecondsLeft % 60).toString().padStart(2,'0');
+  document.getElementById('mt-timer-txt').textContent = `${m}:${s}`;
+}
+
+function confirmSubmit() {
+  const answered = Object.keys(mtUserAnswers).length;
+  const unanswered = mtQuestions.length - answered;
+  if (unanswered > 0) {
+    if (!confirm(`You have ${unanswered} unanswered question(s). Submit anyway?`)) return;
+  }
+  submitMockTest();
+}
+
+async function submitMockTest() {
+  clearInterval(mtTimerInterval);
+  const timeTaken = mtStartTime ? Math.round((Date.now() - mtStartTime) / 1000) : MOCK_TIMER_SECONDS;
+
+  document.getElementById('mt-test').style.display = 'none';
+  document.getElementById('mt-results').style.display = 'block';
+
+  // Compute results
+  let correct = 0, wrong = 0, skipped = 0;
+  mtQuestions.forEach((q, i) => {
+    if (mtUserAnswers[i] === undefined) { skipped++; }
+    else if (mtUserAnswers[i] === q.answer) { correct++; }
+    else { wrong++; }
+  });
+
+  const score = Math.round((correct / mtQuestions.length) * 100);
+  const heroEl = document.getElementById('mt-result-hero');
+  heroEl.className = 'mock-result-hero ' + (score >= 80 ? 'great' : score >= 50 ? 'good' : 'low');
+
+  const emojis = score >= 80 ? '🏆' : score >= 60 ? '🎉' : score >= 40 ? '💪' : '📚';
+  const badges = score >= 80 ? 'Excellent! 🌟' : score >= 60 ? 'Well Done! 🎊' : score >= 40 ? 'Keep Going! 📈' : 'Need More Practice 💡';
+
+  document.getElementById('mt-result-emoji').textContent = emojis;
+  document.getElementById('mt-result-score').textContent = score + '%';
+  document.getElementById('mt-result-badge').textContent = badges;
+  document.getElementById('mt-result-detail').textContent = `${correct} correct out of ${mtQuestions.length} · ${mtLevel} level`;
+  const mm = Math.floor(timeTaken/60), ss = timeTaken%60;
+  document.getElementById('mt-result-time').textContent = `Time taken: ${mm}m ${ss}s`;
+
+  document.getElementById('mt-stat-correct').textContent = correct;
+  document.getElementById('mt-stat-wrong').textContent = wrong;
+  document.getElementById('mt-stat-skip').textContent = skipped;
+
+  if (score === 100) confetti();
+
+  // Award XP
+  const xpEarned = correct * 5;
+  if (xpEarned > 0) addXP(xpEarned, `Mock Test (${mtLevel}): ${correct}/${mtQuestions.length} correct`, 'quiz');
+
+  // Build review
+  buildReview();
+
+  // AI Feedback async
+  try {
+    await getMockAIFeedback(correct, mtQuestions.length, score, wrong);
+  } catch(e) {
+    document.getElementById('mt-ai-loading').textContent = '⚠️ AI feedback unavailable. Check API key.';
+  }
+}
+
+function buildReview() {
+  const list = document.getElementById('mt-review-list');
+  list.innerHTML = '';
+  const letters = ['A','B','C','D'];
+
+  mtQuestions.forEach((q, i) => {
+    const userAns = mtUserAnswers[i];
+    const isCorrect = userAns === q.answer;
+    const isSkipped = userAns === undefined;
+
+    const div = document.createElement('div');
+    div.className = 'mock-review-card ' + (isSkipped ? '' : isCorrect ? 'ok' : 'no');
+    div.innerHTML = `
+      <div style="display:flex;align-items:flex-start;gap:10px;">
+        <div style="font-size:18px;margin-top:1px;flex-shrink:0">${isSkipped ? '⏭️' : isCorrect ? '✅' : '❌'}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-weight:600;font-size:13px;color:var(--navy);margin-bottom:8px;line-height:1.5">${i+1}. ${q.question}</div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;font-size:11px;margin-bottom:6px;">
+            <span style="padding:3px 11px;border-radius:20px;font-weight:700;background:${isSkipped?'#f3f4f6':isCorrect?'#d1fae5':'#fee2e2'};color:${isSkipped?'#6b7280':isCorrect?'#065f46':'#991b1b'}">
+              Your answer: ${isSkipped ? 'Not answered' : letters[userAns] + ') ' + q.options[userAns]}
+            </span>
+            ${!isCorrect ? `<span style="padding:3px 11px;border-radius:20px;font-weight:700;background:#d1fae5;color:#065f46">✓ ${letters[q.answer]}) ${q.options[q.answer]}</span>` : ''}
+          </div>
+          <div id="rexp-${i}" style="display:none;background:#f8faff;border-radius:8px;padding:9px 12px;font-size:12px;color:var(--muted);line-height:1.6;margin-top:4px;">${q.explanation}</div>
+          <button onclick="toggleExp(${i})" style="font-size:11px;color:var(--teal-dark);font-weight:700;cursor:pointer;border:none;background:none;padding:0;margin-top:4px;">▼ Show Explanation</button>
+        </div>
+      </div>`;
+    list.appendChild(div);
+  });
+}
+
+function toggleExp(i) {
+  const el = document.getElementById('rexp-' + i);
+  const btn = el.nextElementSibling;
+  const visible = el.style.display === 'block';
+  el.style.display = visible ? 'none' : 'block';
+  btn.textContent = visible ? '▼ Show Explanation' : '▲ Hide Explanation';
+}
+
+async function getMockAIFeedback(correct, total, score, wrong) {
+  const wrongTopics = mtQuestions
+    .filter((q, i) => mtUserAnswers[i] !== q.answer && mtUserAnswers[i] !== undefined)
+    .map(q => q.topic || q.question.slice(0,60))
+    .slice(0, 6);
+
+  const prompt = `You are a career mentor for Indian tech students.
+
+Student completed a ${mtLevel.toUpperCase()} level ${mtGoalName} domain mock test.
+Score: ${correct}/${total} (${score}%)
+Topics/questions they got wrong: ${wrongTopics.length > 0 ? wrongTopics.join(', ') : 'None — perfect score!'}
+
+Provide:
+1. A motivating 2-3 sentence performance summary
+2. Exactly 3 focus areas to improve (topic names)
+3. Exactly 3 specific study resources (books, courses, platforms — relevant for Indian learners like NPTEL, GeeksforGeeks, Coursera, etc.)
+
+Return ONLY valid JSON:
+{"summary":"...","focusAreas":["area1","area2","area3"],"resources":["resource1","resource2","resource3"]}`;
+
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 600,
+      messages: [{ role: 'user', content: prompt }]
+    })
+  });
+  const data = await res.json();
+  const text = data.content?.[0]?.text || '';
+  const match = text.match(/\{[\s\S]*\}/);
+  if (!match) throw new Error('No JSON');
+  const fb = JSON.parse(match[0]);
+
+  document.getElementById('mt-ai-loading').style.display = 'none';
+  document.getElementById('mt-ai-body').style.display = 'block';
+
+  document.getElementById('mt-ai-summary').textContent = fb.summary || '';
+
+  if (fb.focusAreas?.length) {
+    const chips = document.getElementById('mt-focus-chips');
+    chips.innerHTML = '';
+    fb.focusAreas.forEach(a => {
+      const c = document.createElement('span');
+      c.className = 'mock-focus-chip';
+      c.textContent = '📌 ' + a;
+      chips.appendChild(c);
+    });
+    document.getElementById('mt-focus-section').style.display = 'block';
+  }
+
+  if (fb.resources?.length) {
+    const list = document.getElementById('mt-resources-list');
+    list.innerHTML = '';
+    fb.resources.forEach(r => {
+      const li = document.createElement('li');
+      li.textContent = r;
+      list.appendChild(li);
+    });
+    document.getElementById('mt-resources-section').style.display = 'block';
+  }
+}
+
+function resetMockTest() {
+  clearInterval(mtTimerInterval);
+  mtQuestions = []; mtUserAnswers = {}; mtCurrentIdx = 0; mtLevel = ''; mtStartTime = null;
+  initMockTest();
+}
+
+</script>
+</body>
+</html>
